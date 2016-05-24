@@ -16,5 +16,8 @@ bh: $(SRC)
 install: bh
 	install bh $(PREFIX)/bin/bh
 
+pc:
+	mv ../misc/*.pc /usr/local/lib/pkgconfig/
+
 clean:
 	rm -rf *.gch *.o
