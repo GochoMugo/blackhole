@@ -1,0 +1,6 @@
+#! gochomugo
+# Hit the Ignore button!
+
+deps/
+*.o
+bh

@@ -1,0 +1,63 @@
+# blackhole: Introduction
+
+> Introduction to Blackhole
+
+**Table of Contents**
+
+* [terminology](#terms)
+* [dependencies](#deps)
+* [build](#build)
+* [setup](#setup)
+
+
+<a name="terms"></a>
+## terminology:
+
+* **blackhole directory**: a git repository, configured for use by
+  blackhole, containing a `.blackhole` directory
+* **origin**: the main remote repository, named as **origin**
+  (in `git remote -v`)
+* **remotes**: all remote repositories available to blackhole, excluding
+  **origin**
+
+
+<a name="deps"></a>
+## dependencies:
+
+The dependencies used in the project:
+
+* [libgit2][libgit2]
+* [iniparser][iniparser]
+
+[iniparser]:https://github.com/ndevilla/iniparser
+[libgit2]:https://libgit2.github.com
+
+
+<a name="build"></a>
+## build and install:
+
+1. Ensure you have installed the dependencies [above](#deps) and that they
+   are discovarable using `pkg-config`
+1. Get the source code e.g. clone the repository
+1. `cd blackhole/build`
+1. `make`
+1. `make install`
+
+On a successful build, the executable will be placed at `${PREFIX}/bin/bh`.
+`${PREFIX}` defaults to `/usr/local`.
+
+Run `bh --help` to ensure it is working fine.
+
+
+<a name="setup"></a>
+## setup:
+
+To setup a blackhole directory:
+
+1. `git init` a repository
+1. `mkdir .blackhole`
+1. `touch .blackhole/config.ini`
+1. `git remote add origin <Git-URL using SSH e.g. git@github.com:YourUsername/blackhole>`
+1. [optional] `git remote add redudant-backup <Git-URL using SSH>`
+
+**Note**: blackhole expects to find the origin for pulling changes.
