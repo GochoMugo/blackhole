@@ -28,9 +28,11 @@ The dependencies used in the project:
 
 * [libgit2 v0.24.1][libgit2] (compiled with libssh2 support)
 * [iniparser v4.0][iniparser]
+* [clib][clib] (for installing other deps)
 
 [iniparser]:https://github.com/ndevilla/iniparser/releases/tag/v4.0
 [libgit2]:https://github.com/libgit2/libgit2/releases/tag/v0.24.1
+[clib]:https://github.com/clib/clib
 
 
 <a name="build"></a>
@@ -38,9 +40,10 @@ The dependencies used in the project:
 
 1. Ensure you have installed the dependencies [above](#deps) and that they
    are discovarable using `pkg-config`.
-   * `make pc`: places the pkg-config config files in `misc/` i.e.
+   * **Note**: `make pc`: places the pkg-config config files in `misc/` i.e.
    `misc/*.pc` in `/usr/local/lib/pkgconfig/`.
 1. Get the source code e.g. clone the repository
+1. `clib install`
 1. `cd blackhole/build`
 1. `make`
 1. `make install`
