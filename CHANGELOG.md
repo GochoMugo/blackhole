@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Added:
+
+* Pass daemon name and path to hooks (issue #1)
+
 
 ## 0.0.0 - 2016/05/24
 

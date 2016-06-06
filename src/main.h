@@ -4,7 +4,7 @@
  */
 #ifndef _BH_main_h_
 #define _BH_main_h_ 1
-#define BH_VERSION "0.0.0"
+#define BH_VERSION "0.0.0-develop"
 
 #define _GNU_SOURCE
 #define true 1

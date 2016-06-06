@@ -6,7 +6,8 @@
 
 
 int
-bh_hook_exec(const char *hooks_path, const char *event, const char *message) {
+bh_hook_exec(const char *hooks_path, const char *event,
+        const bh_daemon *daemon, const char *message) {
     int ret_code = 0;
     char *path = NULL;
     char *command = NULL;
@@ -19,7 +20,8 @@ bh_hook_exec(const char *hooks_path, const char *event, const char *message) {
         return_err_now(BH_DAEMONERR_PATHRESLV);
     }
 
-    ret_code = asprintf(&command, "%s '%s'", path, message);
+    ret_code = asprintf(&command, "%s '%s' '%s' '%s'", path, message,
+            daemon->config->name, daemon->config->path);
     return_err(ret_code);
 
     hook_out = popen(command, "r");
