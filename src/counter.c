@@ -115,7 +115,6 @@ bh_counter_get(int *out, const char *counters_path, const char *event) {
          * and return ok */
         if (BH_COUNTERERR_ENOENT == ret_code) {
             *out = 0;
-            bh_error_clear();
             return_ok(ret_code);
         }
         return_err(ret_code);

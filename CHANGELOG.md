@@ -10,6 +10,10 @@ Added:
 
 * Pass daemon name and path to hooks (issue #1)
 
+Changed:
+
+* clear error in `return_ok` macro (issue #4)
+
 
 ## 0.0.0 - 2016/05/24
 
