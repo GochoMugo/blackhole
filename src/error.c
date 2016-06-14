@@ -49,6 +49,7 @@ bh_error_get(void) {
 
 void
 bh_error_clear(void) {
+    if (NULL != bh_err.message) free(bh_err.message);
     bh_err.message = NULL;
     bh_err.internal_error = 0;
     bh_err.git_error = NULL;
