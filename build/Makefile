@@ -41,7 +41,7 @@ test: $(EXE) $(EXE_TEST)
 
 $(EXE_TEST): $(SRC_TEST)
 	mkdir -p $(OUT_TEST)
-	cd $(OUT_TEST) && $(CC) -c $? $(CFLAGS_TEST)
+	cd $(OUT_TEST) && $(CC) -c $? $(CFLAGS_TEST) -g
 	cd $(OUT_TEST) && $(CC) -o $@ *.o $(CFLAGS_TEST) $(LIBS_TEST)
 
 clean:
