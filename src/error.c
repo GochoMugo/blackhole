@@ -43,6 +43,7 @@ bh_error_set(int ret_code) {
 
 const bh_error *
 bh_error_get(void) {
+    if (NULL == bh_err.message) return NULL;
     return &bh_err;
 }
 

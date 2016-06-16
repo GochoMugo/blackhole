@@ -95,7 +95,7 @@ void bh_error_set(int ret_code);
 /**
  * Return the error
  *
- * @return the error global variable
+ * @return the error global variable if set. Otherwise return NULL.
  */
 const bh_error *bh_error_get(void);
 
