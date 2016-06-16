@@ -1,6 +1,8 @@
 #ifndef _BH_tests_h_
 #define _BH_tests_h_ 1
 
+#define _GNU_SOURCE
+
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
