@@ -2,5 +2,7 @@
 # Hit the Ignore button!
 
 deps/
-*.o
+build/
+!build/Makefile
 bh
+bh-tests
