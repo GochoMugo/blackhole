@@ -13,7 +13,9 @@
  * Errors
  */
 typedef enum {
-    BH_GITERR = BH_ERR_START,               /** Generic git error */
+    BH_ERR = BH_ERR_START,                  /** Generic error */
+
+    BH_GITERR,                              /** Generic git error */
     BH_GITERR_NULL_PATH,                    /** Provided path was found to be NULL */
     BH_GITERR_PULL_ORIGIN,                  /** Could not pull from origin */
     BH_GITERR_NO_UPDATES,                   /** No updates were found in remote */
@@ -57,6 +59,8 @@ typedef enum {
  * above
  */
 static char *bh_error_msgs[] = {
+    "generic error",
+
     "generic git error",
     "null path to repository",
     "error pulling from origin",
@@ -98,14 +102,11 @@ static char *bh_error_msgs[] = {
  * errors from git functions and other routines, such as `malloc`.
  */
 typedef struct {
+    /** error code */
+    int code;
+
     /** error message */
     char *message;
-
-    /** BH internal error */
-    int internal_error;
-
-    /** the raw actual git error, if available */
-    const git_error *git_error;
 } bh_error;
 
 

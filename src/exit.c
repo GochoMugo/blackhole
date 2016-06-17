@@ -23,12 +23,14 @@ int bh_exit__hook_run(bh_daemon *daemon, int error_code, const char *event) {
     ret_code = asprintf(&interval_key, "intervals:%s", event);
     return_err(ret_code);
 
-    intervals = iniparser_getint(daemon->config->dict, interval_key, intervals);
+    /* Do not read configuration if we had an error with config module */
+    if (false == bh_error_class(error_code, BH_CONFIGERR, BH_CONFIGERR_END)) {
+        intervals = iniparser_getint(daemon->config->dict, interval_key, intervals);
+    }
 
     /* If the set error and 'error_code' match, we will consider running
      * the hook */
-    if (error_code == bh_err->internal_error ||
-            (NULL != bh_err->git_error && error_code == bh_err->git_error->klass)) {
+    if (error_code == bh_err->code) {
         ret_code = bh_counter_tick(&run, daemon->paths.counters, event, intervals);
         return_err(ret_code);
 
@@ -60,18 +62,24 @@ bh_exit__hooks(bh_daemon *daemon) {
     int runs = 0;
     const bh_error *bh_err = bh_error_get();
 
-    ret_code = bh_exit__hook_run(daemon, BH_GITERR_PULL_ORIGIN, BH_EVENT_PULLERRORS);
-    runs += ret_code;
-    ret_code = bh_exit__hook_run(daemon, BH_GITERR_MERGE_CONFLICTS, BH_EVENT_MERGECONFLICTSERRORS);
-    runs += ret_code;
-    ret_code = bh_exit__hook_run(daemon, BH_GITERR_PUSH_ORIGIN, BH_EVENT_PUSHORIGINERRORS);
-    runs += ret_code;
-    ret_code = bh_exit__hook_run(daemon, BH_GITERR_PUSH_REMOTE, BH_EVENT_PUSHREMOTEERRORS);
-    runs += ret_code;
+    if (NULL != bh_err) {
+        ret_code = bh_exit__hook_run(daemon, BH_GITERR_PULL_ORIGIN, BH_EVENT_PULLERRORS);
+        runs += ret_code;
 
-    /* If no other hook has been executed for the set error, we execute the
-     * fatal.errors hook */
-    if (0 == runs && NULL != bh_err->message) bh_hook_exec(daemon->paths.hooks, BH_EVENT_FATALERRORS, daemon, bh_err->message);
+        ret_code = bh_exit__hook_run(daemon, BH_GITERR_MERGE_CONFLICTS, BH_EVENT_MERGECONFLICTSERRORS);
+        runs += ret_code;
+
+        ret_code = bh_exit__hook_run(daemon, BH_GITERR_PUSH_ORIGIN, BH_EVENT_PUSHORIGINERRORS);
+        runs += ret_code;
+
+        ret_code = bh_exit__hook_run(daemon, BH_GITERR_PUSH_REMOTE, BH_EVENT_PUSHREMOTEERRORS);
+        runs += ret_code;
+
+        /* If no other hook has been executed for the set error, we execute the
+         * fatal.errors hook */
+        if (0 == runs && NULL != bh_err) bh_hook_exec(daemon->paths.hooks, BH_EVENT_FATALERRORS, daemon, bh_err->message);
+    }
+    /* Any other hooks, not necessarily for errors, can be added */
 }
 
 

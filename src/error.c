@@ -11,30 +11,34 @@
 static bh_error bh_err;
 
 
+/* We need to copy the error message, rather than just point to it
+ * since functions like `git_libgit2_shutdown()` tends to discard it
+ */
 void
 bh_error_set(int ret_code) {
-    /* If an error is already set, do not overwrite it */
-    if (NULL != bh_err.message) {
+    /* If an error is already set, do not overwrite it. Also, if
+     * `ret_code` is not less than zero, just return. */
+    if (0 != bh_err.code || 0 <= ret_code) {
         return;
     }
 
     /* Errors from BlackHole */
-    if (BH_ERR_START <= ret_code && BH_ERR_END > ret_code) {
-        bh_err.internal_error = ret_code;
+    if (true == bh_error_class(ret_code, BH_ERR, BH_ERR_END)) {
+        bh_err.code = ret_code;
         asprintf(&bh_err.message, "[BH] %s", bh_error_msgs[abs(BH_ERR_START - ret_code)]);
         return;
     }
 
     /* Errors from LibGit2 */
-    bh_err.git_error = giterr_last();
-    if (NULL != bh_err.git_error) {
-        /* We need to copy the error message, rather than just point to it
-         * since `git_libgit2_shutdown()` tends to discard it */
-        asprintf(&bh_err.message, "[LIBGIT2] %s", bh_err.git_error->message);
+    const git_error *git_err = giterr_last();
+    if (NULL != git_err) {
+        bh_err.code = BH_GITERR;
+        asprintf(&bh_err.message, "[LIBGIT2] %s", git_err->message);
         return;
     }
 
     /** Errors from OS or any other routine */
+    bh_err.code = BH_ERR;
     asprintf(&bh_err.message, "[MISC] %s", strerror(errno));
     errno = 0;
     return;
@@ -51,9 +55,8 @@ bh_error_get(void) {
 void
 bh_error_clear(void) {
     if (NULL != bh_err.message) free(bh_err.message);
+    bh_err.code = 0;
     bh_err.message = NULL;
-    bh_err.internal_error = 0;
-    bh_err.git_error = NULL;
 }
 
 

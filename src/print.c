@@ -21,7 +21,7 @@ void
 bh_print_status(bh_daemon *daemon) {
     const bh_error *err = bh_error_get();
 
-   if (NULL == err->message) {
+   if (NULL == err) {
         bh_print_ok();
         return;
     }
@@ -37,7 +37,7 @@ void
 bh_print_status_and_exit(bh_daemon *daemon) {
     const bh_error *err = bh_error_get();
 
-    if (NULL == err->message) {
+    if (NULL == err) {
         bh_print_ok();
         return;
     }

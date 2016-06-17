@@ -25,15 +25,16 @@ int tests_bh_error_teardown_each(void **state) {
 
 
 /**
- * We know that `BH_ERR_START` defines the code for our first error
+ * We know that `BH_ERR` defines the code for our first error
  * in our error list. Use it to see if the function set the error
  * appropriately.
  */
 void tests_bh_error_set_bh(void **state) {
-    bh_error_set(BH_ERR_START);
-    const bh_error *err = bh_error_get();
+    const bh_error *err;
+    bh_error_set(BH_ERR);
+    err = bh_error_get();
+    assert_int_equal(BH_ERR_START, err->code);
     assert_non_null(strstr(err->message, "[BH]"));
-    assert_non_null(err->internal_error);
 }
 
 
@@ -44,12 +45,13 @@ void tests_bh_error_set_bh(void **state) {
  */
 void tests_bh_error_set_libgit2(void **state) {
     const char *message = "sample error message";
+    const bh_error *err;
     giterr_set_str(1, message);
     bh_error_set(-1);
-    const bh_error *err = bh_error_get();
+    err = bh_error_get();
+    assert_int_equal(err->code, BH_GITERR);
     assert_non_null(strstr(err->message, message));
     assert_non_null(strstr(err->message, "[LIBGIT2]"));
-    assert_non_null(err->git_error);
 }
 
 
@@ -60,9 +62,11 @@ void tests_bh_error_set_libgit2(void **state) {
  * Also, most syscalls return -1 on error.
  */
 void tests_bh_error_set_errno(void **state) {
+    const bh_error *err;
     errno = ENOENT;
     bh_error_set(-1);
-    const bh_error *err = bh_error_get();
+    err = bh_error_get();
+    assert_int_equal(err->code, BH_ERR);
     assert_non_null(strstr(err->message, "[MISC]"));
 }
 
@@ -72,13 +76,26 @@ void tests_bh_error_set_errno(void **state) {
  * effect.
  */
 void tests_bh_error_set_already_set(void **state) {
-    bh_error_set(BH_ERR_START);
-    const bh_error *err = bh_error_get();
-    assert_non_null(err->message);
-    const char *message = NULL;
+    char *message = NULL;
+    const bh_error *err;
+    bh_error_set(BH_ERR);
+    err = bh_error_get();
+    assert_int_equal(err->code, BH_ERR);
     asprintf(&message, "%s", err->message);
-    bh_error_set(BH_ERR_START + 1);
+    bh_error_set(BH_ERR + 1);
     assert_string_equal(err->message, message);;
+}
+
+
+/**
+ * Setting an error, using a return code greater than or equal to 0.
+ * is ignored.
+ */
+void tests_bh_error_set_zero(void **state) {
+    bh_error_set(0);
+    assert_null(bh_error_get());
+    bh_error_set(1);
+    assert_null(bh_error_get());
 }
 
 
@@ -113,13 +130,12 @@ void tests_bh_error_get_pointer(void **state) {
 void tests_bh_error_clear_resets(void **state) {
     const bh_error *err = NULL;
 
-    bh_error_set(BH_ERR_START);
+    bh_error_set(BH_ERR);
     err = bh_error_get();
     bh_error_clear();
 
+    assert_int_equal(err->code, 0);
     assert_null(err->message);
-    assert_int_equal(err->internal_error, 0);
-    assert_null(err->git_error);
 }
 
 
