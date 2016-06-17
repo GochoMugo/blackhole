@@ -52,7 +52,7 @@ cleanup:
 void
 bh_daemon_free(bh_daemon *daemon) {
     if (NULL == daemon) return;
-    if (NULL != daemon->config) bh_config_free(daemon->config);
+    if (NULL != daemon->config) bh_config_free(&daemon->config);
     if (NULL != daemon->paths.counters) free(daemon->paths.counters);
     if (NULL != daemon->paths.hooks) free(daemon->paths.hooks);
     if (NULL != daemon->manager) bh_git_repository_manager_free(daemon->manager);

@@ -50,12 +50,13 @@ cleanup:
 
 
 void
-bh_config_free(bh_config *config) {
-    if (NULL == config) return;
+bh_config_free(bh_config **config) {
+    bh_config *c = *config;
+    if (NULL == c) return;
     /** config->name, config->email are freed with `iniparser_freedict()` below */
-    if (NULL != config->dict) iniparser_freedict((dictionary *) config->dict);
-    if (NULL != config->path) free(config->path);
-    if (NULL != config->runstate_path) free(config->runstate_path);
-    free(config);
-    config = NULL;
+    if (NULL != c->dict) iniparser_freedict((dictionary *) c->dict);
+    if (NULL != c->path) free(c->path);
+    if (NULL != c->runstate_path) free(c->runstate_path);
+    free(c);
+    *config = NULL;
 }

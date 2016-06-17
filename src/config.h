@@ -21,7 +21,7 @@ int bh_config_new(bh_config **config, const char *rootdir);
  *
  * @param config A Configuration object
  */
-void bh_config_free(bh_config *config);
+void bh_config_free(bh_config **config);
 
 
 #endif
