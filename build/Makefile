@@ -16,7 +16,8 @@ LIB          = $(OUT)/libblackhole.a
 
 CFLAGS_TEST  = `pkg-config --cflags cmocka`
 LIBS_TEST    = `pkg-config --libs cmocka` -L$(OUT) -lblackhole $(LIBS)
-SRC_TEST     = $(ROOT)/test/*.c
+TEST_DIR     = $(ROOT)/test
+SRC_TEST     = $(TEST_DIR)/*.c
 OUT_TEST     = $(PWD)/test
 EXE_TEST     = $(PWD)/bh-tests
 
@@ -37,7 +38,8 @@ pc:
 	mv $(ROOT)/misc/*.pc $(PREFIX)/lib/pkgconfig/
 
 test: $(EXE) $(EXE_TEST)
-	$(EXE_TEST)
+	TEST_DIR=$(TEST_DIR) \
+        $(EXE_TEST)
 
 $(EXE_TEST): $(SRC_TEST)
 	mkdir -p $(OUT_TEST)
