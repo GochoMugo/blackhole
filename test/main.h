@@ -3,6 +3,8 @@
 
 #define _GNU_SOURCE
 
+#define assert_ok assert_true
+
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -12,6 +14,7 @@
 
 #include "../src/main.h"
 
+#include "config.h"
 #include "error.h"
 
 #endif

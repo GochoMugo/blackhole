@@ -44,4 +44,7 @@ static const struct CMUnitTest tests_bh_error[] = {
 };
 
 
+#undef setup_each
+#undef teardown_each
+
 #endif

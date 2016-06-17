@@ -5,6 +5,7 @@ int main(void) {
 
     git_libgit2_init();
 
+    failed_tests += cmocka_run_group_tests_name("bh_config", tests_bh_config, NULL, NULL);
     failed_tests += cmocka_run_group_tests_name("bh_error", tests_bh_error, NULL, NULL);
 
     git_libgit2_shutdown();
