@@ -121,3 +121,30 @@ void tests_bh_error_clear_resets(void **state) {
     assert_int_equal(err->internal_error, 0);
     assert_null(err->git_error);
 }
+
+
+/**
+ * `bh_error_class()` should return `true` for `BH_GITERR`, a generic class,
+ * as  a class of `BH_GITERR`.
+ */
+void tests_bh_error_class_true_for_class_itself(void **state) {
+    assert_true(bh_error_class(BH_GITERR, BH_GITERR, BH_GITERR_END));
+}
+
+
+/**
+ * `bh_error_class()` should return `true` for `BH_GITERR_PULL_ORIGIN`
+ * as an error of class `BH_GITERR`.
+ */
+void tests_bh_error_class_true(void **state) {
+    assert_true(bh_error_class(BH_GITERR_PULL_ORIGIN, BH_GITERR, BH_GITERR_END));
+}
+
+
+/**
+ * `bh_error_class()` should return `false` for `BH_GITERR_PULL_ORIGIN`
+ * as an error of class `BH_DAEMONERR`.
+ */
+void tests_bh_error_class_false(void **state) {
+    assert_false(bh_error_class(BH_GITERR_PULL_ORIGIN, BH_DAEMONERR, BH_DAEMONERR_END));
+}

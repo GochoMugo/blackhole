@@ -22,6 +22,12 @@ void tests_bh_error_get_null_if_unset(void **state);
 void tests_bh_error_get_pointer(void **state);
 /* `bh_error_clear` reset the global error variable */
 void tests_bh_error_clear_resets(void **state);
+/* `bh_error_class` returns `true` for class itself */
+void tests_bh_error_class_true_for_class_itself(void **state);
+/* `bh_error_class` returns `true` for an error */
+void tests_bh_error_class_true(void **state);
+/* `bh_error_class` returns `false` for an error */
+void tests_bh_error_class_false(void **state);
 
 
 static const struct CMUnitTest tests_bh_error[] = {
@@ -32,6 +38,9 @@ static const struct CMUnitTest tests_bh_error[] = {
     cmocka_unit_test_setup_teardown(tests_bh_error_get_null_if_unset, setup_each, teardown_each),
     cmocka_unit_test_setup_teardown(tests_bh_error_get_pointer, setup_each, teardown_each),
     cmocka_unit_test_setup_teardown(tests_bh_error_clear_resets, setup_each, teardown_each),
+    cmocka_unit_test_setup_teardown(tests_bh_error_class_true_for_class_itself, setup_each, teardown_each),
+    cmocka_unit_test_setup_teardown(tests_bh_error_class_true, setup_each, teardown_each),
+    cmocka_unit_test_setup_teardown(tests_bh_error_class_false, setup_each, teardown_each),
 };
 
 

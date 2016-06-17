@@ -55,3 +55,11 @@ bh_error_clear(void) {
     bh_err.internal_error = 0;
     bh_err.git_error = NULL;
 }
+
+
+int
+bh_error_class(int error_code, int error_class, int error_end) {
+    int diff = error_code - error_class;
+    int length = error_end - error_class;
+    return diff >= 0 && diff < length ? true : false;
+}
