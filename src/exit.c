@@ -35,7 +35,7 @@ int bh_exit__hook_run(bh_daemon *daemon, int error_code, const char *event) {
         return_err(ret_code);
 
         if (true == run) {
-            ret_code = bh_hook_exec(daemon->paths.hooks, event, daemon, bh_err->message);
+            ret_code = bh_hook_exec(daemon, event, bh_err->message);
             return_err(ret_code);
         }
 
@@ -77,7 +77,7 @@ bh_exit__hooks(bh_daemon *daemon) {
 
         /* If no other hook has been executed for the set error, we execute the
          * fatal.errors hook */
-        if (0 == runs && NULL != bh_err) bh_hook_exec(daemon->paths.hooks, BH_EVENT_FATALERRORS, daemon, bh_err->message);
+        if (0 == runs && NULL != bh_err) bh_hook_exec(daemon, BH_EVENT_FATALERRORS, bh_err->message);
     }
     /* Any other hooks, not necessarily for errors, can be added */
 }

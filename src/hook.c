@@ -6,16 +6,14 @@
 
 
 int
-bh_hook_exec(const char *hooks_path, const char *event,
-        const bh_daemon *daemon, const char *message) {
+bh_hook_exec(const bh_daemon *daemon, const char *event, const char *message) {
     int ret_code = 0;
     char *path = NULL;
     char *command = NULL;
-    FILE *hook_out = NULL;
-    char *line = NULL;
+    int exit_status = 0;
     size_t len = 0;
 
-    path = path_join(hooks_path, event);
+    path = path_join(daemon->paths.hooks, event);
     if (NULL == path) {
         return_err_now(BH_DAEMONERR_PATHRESLV);
     }
@@ -24,24 +22,20 @@ bh_hook_exec(const char *hooks_path, const char *event,
             daemon->config->name, daemon->config->path);
     return_err(ret_code);
 
-    hook_out = popen(command, "r");
-    if (NULL == hook_out) {
-        return_err_now(BH_HOOKERR_HOOK_FAILED);
-    }
+    ret_code = system(command);
+    return_err_ext(ret_code, BH_HOOKERR_EXEC);
 
-    ret_code = getline(&line, &len, hook_out);
-    return_err(ret_code);
-
-    if (NULL != strstr(line, ": not found")) {
-        return_err_now(BH_HOOKERR_NO_HOOK);
+    exit_status = WEXITSTATUS(ret_code);
+    if (0 != exit_status) {
+        if (127 == exit_status) return_err_now(BH_HOOKERR_NO_HOOK);
+        return_err_now(BH_HOOKERR_FAILED);
     }
+    ret_code = 0; /* `system()` above sets to exit code of command */
 
     goto cleanup;
 on_error:
     goto cleanup;
 cleanup:
-    if (NULL != line) free(line);
-    if (NULL != hook_out) pclose(hook_out);
     if (NULL != command) free(command);
     if (NULL != path) free(path);
     return ret_code;

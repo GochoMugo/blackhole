@@ -37,8 +37,9 @@ typedef enum {
     BH_DAEMONERR_END,
 
     BH_HOOKERR,                             /** Generic hook error */
+    BH_HOOKERR_EXEC,                        /** Hook excution failed */
     BH_HOOKERR_NO_HOOK,                     /** Hook not registered */
-    BH_HOOKERR_HOOK_FAILED,                 /** Hook failed */
+    BH_HOOKERR_FAILED,                      /** Hook failed */
     BH_HOOKERR_END,
 
     BH_COUNTERERR,                          /** Generic counter error */
@@ -83,6 +84,7 @@ static char *bh_error_msgs[] = {
     "end:daemonerr",
 
     "generic hook error",
+    "hook execution failed",
     "hook not found",
     "hook exited unsuccessfully",
     "end:hookerr",

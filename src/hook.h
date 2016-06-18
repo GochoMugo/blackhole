@@ -8,16 +8,14 @@
 /**
  * Execute the hook named 'name'
  *
- * @param hooks_path Path to the 'hooks' directory
- * @param event The event in consideration
  * @param daemon The Daemon information
+ * @param event The event in consideration
  * @param message Message to pass to hook
  * @return 0 or error code
  */
 int
-bh_hook_exec(const char *hooks_path,
+bh_hook_exec(const bh_daemon *daemon,
         const char *event,
-        const bh_daemon *daemon,
         const char *message);
 
 
