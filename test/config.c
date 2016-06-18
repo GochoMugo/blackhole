@@ -86,6 +86,5 @@ void tests_bh_config_new_missing_configfile(void **state) {
  */
 void tests_bh_config_free_null(void **state) {
     bh_config_free(&config);
-    printf("config = %p\n", config);
     assert_null(config);
 }
