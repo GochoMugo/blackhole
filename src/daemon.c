@@ -6,7 +6,7 @@
 
 
 int
-bh_daemon_new(bh_daemon **daemon, char *path) {
+bh_daemon_new(bh_daemon **daemon, const char *path) {
     int ret_code = 0;
     bh_daemon *d = NULL;
 

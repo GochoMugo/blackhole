@@ -13,7 +13,7 @@
  * @param path Path to the Repository
  * @return 0 or error code
  */
-int bh_daemon_new(bh_daemon **daemon, char *path);
+int bh_daemon_new(bh_daemon **daemon, const char *path);
 
 
 /**
