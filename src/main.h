@@ -23,8 +23,8 @@
 #define BH_EVENT_FATALERRORS "fatal.errors"
 
 #define return_ok(ret_code) { ret_code = 0; bh_error_clear(); goto cleanup; }
-#define return_err(ret_code) if (0 > ret_code) { bh_error_set(ret_code); goto on_error; }
-#define return_err_ext(ret_code, custom_err) if (0 > ret_code) { ret_code = custom_err; bh_error_set(ret_code); goto on_error; }
+#define return_err(result) if (0 > result) { ret_code = result; bh_error_set(ret_code); goto on_error; }
+#define return_err_ext(result, custom_err) if (0 > result) { ret_code = custom_err; bh_error_set(ret_code); goto on_error; }
 #define return_err_now(custom_err) { ret_code = custom_err; bh_error_set(ret_code); goto on_error; }
 
 #include <errno.h>
