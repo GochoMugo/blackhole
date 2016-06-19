@@ -28,7 +28,7 @@ bh_git_repository_manager_new(bh_git_repository_manager **manager,
  *
  * @param manager Repository manager
  */
-void bh_git_repository_manager_free(bh_git_repository_manager *manager);
+void bh_git_repository_manager_free(bh_git_repository_manager **manager);
 
 
 /**

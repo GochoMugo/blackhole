@@ -73,20 +73,21 @@ cleanup:
 
 
 void
-bh_git_repository_manager_free(bh_git_repository_manager *manager) {
-    if (NULL != manager->remotes) {
+bh_git_repository_manager_free(bh_git_repository_manager **manager) {
+    bh_git_repository_manager *mgr = *manager;
+    if (NULL != mgr->remotes) {
         int i;
-        for (i = 0; i < manager->num_of_remotes; i++) {
-            git_remote_free(manager->remotes[i]);
+        for (i = 0; i < mgr->num_of_remotes; i++) {
+            git_remote_free(mgr->remotes[i]);
         }
-        free(manager->remotes);
+        free(mgr->remotes);
     }
 
-    /* free(manager->origin) - this is already done by the loop
+    /* free(mgr->origin) - this is already done by the loop
      * above */
-    if (NULL != manager->repository) git_repository_free(manager->repository);
-    if (NULL != manager) free(manager);
-    manager = NULL;
+    if (NULL != mgr->repository) git_repository_free(mgr->repository);
+    if (NULL != mgr) free(mgr);
+    *manager = NULL;
     git_libgit2_shutdown();
 }
 
