@@ -15,6 +15,7 @@
 #include "../src/main.h"
 
 #include "config.h"
+#include "counter.h"
 #include "daemon.h"
 #include "error.h"
 #include "hook.h"

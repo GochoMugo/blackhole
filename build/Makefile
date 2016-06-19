@@ -38,7 +38,7 @@ pc:
 	mv $(ROOT)/misc/*.pc $(PREFIX)/lib/pkgconfig/
 
 test: $(EXE) $(EXE_TEST)
-	cd $(TEST_DIR) && ./setup.sh
+	cd $(TEST_DIR) && CC=$(CC) ./setup.sh
 	TEST_DIR=$(TEST_DIR) \
         $(EXE_TEST)
 

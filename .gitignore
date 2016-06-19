@@ -1,8 +1,13 @@
 #! gochomugo
 # Hit the Ignore button!
 
+# dependencies
 deps/
+
+# build artefacts
 build/
 !build/Makefile
-bh
-bh-tests
+
+# test artefacts
+test/data/noop
+test/data/**/*.tmp.counter
