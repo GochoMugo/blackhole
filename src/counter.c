@@ -84,6 +84,11 @@ bh_counter__get(int *out, FILE *file) {
     int count = -1;
 
     ret_code = fscanf(file, "%d", &count);
+    /* if the file is of zero-length */
+    if (EOF == ret_code) {
+        count = 0;
+        ret_code = 0;
+    }
     return_err(ret_code);
 
     ret_code = fseek(file, 0, SEEK_SET);
@@ -153,6 +158,7 @@ bh_counter_increment(int *out, const char *counters_path, const char *event) {
     return_err_ext(ret_code, BH_COUNTERERR_FWRITE);
 
     *out = count;
+    ret_code = 0;
 
     goto cleanup;
 on_error:
