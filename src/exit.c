@@ -85,5 +85,6 @@ bh_exit__hooks(bh_daemon *daemon) {
 
 void bh_exit(bh_daemon *daemon, int success) {
     bh_exit__hooks(daemon);
+    bh_daemon_free(&daemon);
     exit(true == success ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -21,7 +21,7 @@ int bh_daemon_new(bh_daemon **daemon, const char *path);
  *
  * @param daemon Daemon
  */
-void bh_daemon_free(bh_daemon *daemon);
+void bh_daemon_free(bh_daemon **daemon);
 
 
 #endif

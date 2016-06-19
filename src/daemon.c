@@ -42,7 +42,7 @@ bh_daemon_new(bh_daemon **daemon, const char *path) {
 
     goto cleanup;
 on_error:
-    if (NULL != d) bh_daemon_free(d);
+    if (NULL != d) bh_daemon_free(&d);
     goto cleanup;
 cleanup:
     return ret_code;
@@ -50,13 +50,14 @@ cleanup:
 
 
 void
-bh_daemon_free(bh_daemon *daemon) {
-    if (NULL == daemon) return;
-    if (NULL != daemon->config) bh_config_free(&daemon->config);
-    if (NULL != daemon->paths.counters) free(daemon->paths.counters);
-    if (NULL != daemon->paths.hooks) free(daemon->paths.hooks);
-    if (NULL != daemon->manager) bh_git_repository_manager_free(daemon->manager);
-    if (NULL != daemon->signature) git_signature_free(daemon->signature);
-    free(daemon);
-    daemon = NULL;
+bh_daemon_free(bh_daemon **daemon) {
+    bh_daemon *d = *daemon;
+    if (NULL == d) return;
+    if (NULL != d->config) bh_config_free(&(d->config));
+    if (NULL != d->paths.counters) free(d->paths.counters);
+    if (NULL != d->paths.hooks) free(d->paths.hooks);
+    if (NULL != d->manager) bh_git_repository_manager_free(&(d->manager));
+    if (NULL != d->signature) git_signature_free(d->signature);
+    free(d);
+    *daemon = NULL;
 }
