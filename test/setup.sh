@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
-git_init=(
-    data/bh-hook
-    data/bh-daemon
-)
+set -e
+
 
 # remove counters incremented in previous test runs
 rm -f data/bh-counter/.blackhole/counters/*.tmp.counter
 
-# initialing repositories
+
+git_init=(
+    "data/bh-hook"
+    "data/bh-daemon"
+    "data/bh-status"
+)
 for repo in ${git_init[@]}
 do
     [[ -d "${repo}/.git" ]] && continue
@@ -16,6 +19,18 @@ do
 done
 
 
+git_commit=(
+    "data/bh-status"
+)
+for repo in ${git_commit[@]}
+do
+    pushd "${repo}"
+    git rev-parse HEAD > /dev/null 2>&1 && { popd; continue; }
+    touch .gitkeep
+    git add .gitkeep
+    git commit -m "root commit (for testing)"
+    popd
+done
 
 
 counter_unreadable="data/bh-counter/.blackhole/counters/unreadable.tmp.counter"

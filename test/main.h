@@ -19,5 +19,6 @@
 #include "daemon.h"
 #include "error.h"
 #include "hook.h"
+#include "status.h"
 
 #endif

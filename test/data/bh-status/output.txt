@@ -1,0 +1,9 @@
+
+                name : test
+             rootdir : ../bh-status
+              branch : master
+               dirty : yes
+            err.pull : 1
+        err.pushorig : 2
+         err.pushrem : 3
+
