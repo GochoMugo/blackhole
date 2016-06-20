@@ -60,5 +60,5 @@ void tests_bh_hook_exec_fail(void **state) {
  * the hook fails. The script 'exec.sh' can not be executed.
  */
 void tests_bh_hook_exec_execfail(void **state) {
-    puts(" !! skipped");
+    skip();
 }
