@@ -5,6 +5,8 @@ git_init=(
     data/bh-daemon
 )
 
+# remove counters incremented in previous test runs
+rm -f data/bh-counter/.blackhole/counters/*.tmp.counter
 
 # initialing repositories
 for repo in ${git_init[@]}
@@ -14,14 +16,13 @@ do
 done
 
 
-# removing read permissions
-chmod -r data/bh-counter/.blackhole/counters/unreadable.counter
 
 
+counter_unreadable="data/bh-counter/.blackhole/counters/unreadable.tmp.counter"
+touch "${counter_unreadable}"
+chmod -r "${counter_unreadable}"
 
 
-# remove counters incremented in previous test runs
-rm -f data/bh-counter/.blackhole/counters/*.tmp.counter
 exes=(
     "data/noop"
     "data/bh-status/run"

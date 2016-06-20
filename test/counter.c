@@ -86,12 +86,12 @@ void tests_bh_counter_get_binary(void **state) {
 
 /**
  * `bh_counter_get()` return error BH_COUNTERERR_FOPEN if the file
- * could not be read. 'unreadable.counter' has permissions set to
+ * could not be read. 'unreadable.tmp.counter' has permissions set to
  * deny us access to read it.
  */
 void tests_bh_counter_get_read_perm(void **state) {
     int count = -2;
-    int ret_code = bh_counter_get(&count, path_counters, "unreadable.counter");
+    int ret_code = bh_counter_get(&count, path_counters, "unreadable.tmp.counter");
     assert_int_equal(ret_code, BH_COUNTERERR_FOPEN);
     assert_int_equal(count, -2);
 }
