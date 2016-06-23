@@ -113,7 +113,8 @@ bh_git_fetch_origin(bh_git_repository_manager *manager) {
     err = giterr_last();
     if (NULL != err) {
         if (NULL != strstr(err->message, "Connection refused") ||
-            NULL != strstr(err->message, "Name or service not known")) {
+            NULL != strstr(err->message, "Name or service not known") ||
+            NULL != strstr(err->message, "Network is unreachable")) {
             return_err_now(BH_GITERR_PULL_ORIGIN);
         }
     }
