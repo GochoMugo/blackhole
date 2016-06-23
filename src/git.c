@@ -147,6 +147,7 @@ bh_git_merge_origin(git_commit **out, bh_git_repository_manager *manager) {
 
     /** Exit early, if the commit OIDs are the same */
     if (git_oid_equal(&current_commit_id, &new_commit_id)) {
+        *out = NULL;
         goto cleanup;
     }
 
