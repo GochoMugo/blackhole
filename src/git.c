@@ -76,6 +76,8 @@ cleanup:
 void
 bh_git_repository_manager_free(bh_git_repository_manager **manager) {
     bh_git_repository_manager *mgr = *manager;
+    if (NULL == mgr) return;
+
     if (NULL != mgr->remotes) {
         int i;
         for (i = 0; i < mgr->num_of_remotes; i++) {
