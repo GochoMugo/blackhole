@@ -62,7 +62,8 @@ bh_git_repository_manager_new(bh_git_repository_manager **manager,
     goto cleanup;
 on_error:
     /** free(remotes) - bh_git_repository_manager_free() does it for us */
-    if (NULL != mgr) bh_git_repository_manager_free(mgr);
+    if (NULL != mgr) bh_git_repository_manager_free(&mgr);
+    *manager = NULL;
     goto cleanup;
 cleanup:
     /** free(remotes) - bh_git_repository_manager_free() does it for us, once
