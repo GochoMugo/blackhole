@@ -11,3 +11,5 @@ build/
 # test artefacts
 test/data/**/*.tmp.counter
 test/data/**/*.out
+test/*.h
+!test/main.h

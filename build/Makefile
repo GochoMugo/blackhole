@@ -5,6 +5,7 @@
 
 ROOT         = $(PWD)/..
 PREFIX      ?= /usr/local
+SCRIPTS      = $(ROOT)/script
 
 CFLAGS      += `pkg-config --cflags libgit2 libiniparser` -I$(ROOT)/deps/
 CFLAGS      += --std=c99 -Wall -pedantic
@@ -44,6 +45,7 @@ test: $(EXE) $(EXE_TEST)
 
 $(EXE_TEST): $(SRC_TEST)
 	mkdir -p $(OUT_TEST)
+	$(SCRIPTS)/gen-test-headers.sh $(SRC_TEST)
 	cd $(OUT_TEST) && $(CC) -c $? $(CFLAGS_TEST) -g
 	cd $(OUT_TEST) && $(CC) -o $@ *.o $(CFLAGS_TEST) $(LIBS_TEST)
 
