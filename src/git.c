@@ -164,7 +164,7 @@ bh_git_merge_origin(git_commit **out, bh_git_repository_manager *manager) {
     return_err(ret_code);
 
     /** Exit with an error, if we had conflicts */
-    if (0 == git_index_has_conflicts(new_index)) {
+    if (1 == git_index_has_conflicts(new_index)) {
         return_err_now(BH_GITERR_MERGE_CONFLICTS);
     }
 
