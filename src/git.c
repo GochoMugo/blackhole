@@ -350,7 +350,7 @@ bh_git_push(bh_git_repository_manager *manager, git_reference *current_ref, int 
             if (manager->remotes[index] == manager->origin) continue;
 
             ret_code = git_remote_push(manager->remotes[index], &refspecs, &options);
-            return_err_now(BH_GITERR_PUSH_REMOTE);
+            return_err_ext(ret_code, BH_GITERR_PUSH_REMOTE);
         }
     }
 
