@@ -52,7 +52,7 @@ $(EXE_TEST): $(SRC_TEST)
 clean:
 	$(RM) -r $(OUT) $(OUT_TEST)
 	$(RM) -r $(TEST_DIR)/data/**.tmp.counter $(TEST_DIR)/data/**/.git/ \
-		$(TEST_DIR)/data/**/*.out
+		$(TEST_DIR)/data/**/*.out $(TEST_DIR)/[!main]*.h
 
 veryclean: clean
 	$(RM) $(EXE) $(EXE_TEST)
