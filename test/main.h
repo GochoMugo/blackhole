@@ -18,6 +18,7 @@
 #include "counter.h"
 #include "daemon.h"
 #include "error.h"
+#include "git.h"
 #include "hook.h"
 #include "status.h"
 
