@@ -327,8 +327,13 @@ bh_git_push(bh_git_repository_manager *manager, git_reference *current_ref, int 
             unsigned int allowed_types, void *payload) {
         return git_cred_ssh_key_from_agent(out, username_from_url);
     }
-
     options.callbacks.credentials = credentials_cb;
+
+    /* Init the refspecs */
+    refspecs.strings = malloc(sizeof(char*) * 1);
+    if (NULL == refspecs.strings) {
+        return_err_now(BH_GITERR_NOMEM);
+    }
 
     /** Add the refspecs */
     ret_code = asprintf(&refspecs.strings[0], "%s", git_reference_name(current_ref));
