@@ -458,14 +458,19 @@ int
 bh_git__update_ref(bh_git_repository_manager *manager, const char *ref_name, git_oid *commit_id, const char *reflog) {
     int ret_code = 0;
     git_reference *current_master_ref = NULL;
+    git_reference *real_master_ref = NULL;
     git_reference *new_master_ref = NULL;
 
     /** Get the reference to the 'master' branch */
     ret_code = git_reference_lookup(&current_master_ref, manager->repository, ref_name);
     return_err(ret_code);
 
+    /** Resolve the reference. It might be symbolic */
+    ret_code = git_reference_resolve(&real_master_ref, current_master_ref);
+    return_err(ret_code);
+
     /** Update this reference to point to the commit */
-    git_reference_set_target(&new_master_ref, current_master_ref, commit_id, reflog);
+    ret_code = git_reference_set_target(&new_master_ref, real_master_ref, commit_id, reflog);
     return_err(ret_code);
 
     goto cleanup;
@@ -473,6 +478,7 @@ on_error:
     goto cleanup;
 cleanup:
     if (NULL != current_master_ref) git_reference_free(current_master_ref);
+    if (NULL != real_master_ref) git_reference_free(real_master_ref);
     if (NULL != new_master_ref) git_reference_free(new_master_ref);
     return ret_code;
 
