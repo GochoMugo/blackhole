@@ -73,7 +73,7 @@ int bh_git_commit_changes(git_commit **new_commit,
  * pushed to the origin. Otherwise, changes are pushed to all remotes.
  *
  * @param manager Repository manager
- * @param current_ref Reference to the current branch
+ * @param current_ref Reference to the current branch. Assign NULL to use HEAD.
  * @param origin_only Whether to push to 'origin' only
  * @return 0 on success, BH_GITERR_PUSH_ORIGIN, BH_GITERR_PUSH_REMOTE or other error code
  */

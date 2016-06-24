@@ -313,9 +313,10 @@ bh_git_push(bh_git_repository_manager *manager, git_reference *current_ref, int 
     git_strarray refspecs = {0};
     git_push_options options = GIT_PUSH_OPTIONS_INIT;
 
-    /** Get the push refpspecs */
-    ret_code = git_remote_get_push_refspecs(&refspecs, manager->origin);
-    return_err(ret_code);
+    if (NULL == current_ref) {
+        ret_code = git_repository_head(&current_ref, manager->repository);
+        return_err(ret_code);
+    }
 
     int credentials_cb(git_cred **out, const char *url,
             const char *username_from_url,
