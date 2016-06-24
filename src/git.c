@@ -134,8 +134,9 @@ bh_git_merge_origin(git_commit **out, bh_git_repository_manager *manager) {
     git_oid current_commit_id, new_commit_id;
     git_commit *current_commit = NULL, *new_commit = NULL;
     git_index *current_index = NULL, *new_index = NULL;
-    git_oid current_tree_id, new_tree_id;
-    git_tree *current_tree = NULL, *new_tree = NULL;
+    git_oid new_tree_id;
+    git_tree *new_tree = NULL;
+    git_checkout_options checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
 
     /** Get the OID of the current commit */
     ret_code = git_reference_name_to_id(&current_commit_id, manager->repository, "HEAD");
@@ -169,7 +170,7 @@ bh_git_merge_origin(git_commit **out, bh_git_repository_manager *manager) {
     }
 
     /** Writing the new tree pointed to, by the new index, producing the OID of the new tree */
-    ret_code = git_index_write_tree(&new_tree_id, new_index);
+    ret_code = git_index_write_tree_to(&new_tree_id, new_index, manager->repository);
     return_err(ret_code);
 
     /** Read the new tree into memory */
@@ -180,16 +181,18 @@ bh_git_merge_origin(git_commit **out, bh_git_repository_manager *manager) {
     ret_code = git_repository_index(&current_index, manager->repository);
     return_err(ret_code);
 
-    /** Get the OID of the current tree, being pointed by HEAD */
-    ret_code = git_reference_name_to_id(&current_tree_id, manager->repository, "HEAD");
-    return_err(ret_code);
-
-    /** Read the current tree into memory to allow rollback, if this fails */
-    ret_code = git_tree_lookup(&current_tree, manager->repository, &current_tree_id);
-    return_err(ret_code);
-
     /** Read the new tree into the repository's index */
     ret_code = git_index_read_tree(current_index, new_tree);
+    return_err(ret_code);
+
+    /** Checkout the index */
+    checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
+    ret_code = git_checkout_index(manager->repository, current_index, &checkout_opts);
+    if (0 != ret_code &&
+        NULL != giterr_last() &&
+        NULL != strstr(giterr_last()->message, "conflict prevents checkout")) {
+        return_err_now(BH_GITERR_MERGE_CONFLICTS);
+    }
     return_err(ret_code);
 
     /** Update the master reference to point to the new commit */
@@ -205,13 +208,13 @@ bh_git_merge_origin(git_commit **out, bh_git_repository_manager *manager) {
 
     goto cleanup;
 on_error:
+    *out = NULL;
     goto cleanup;
 cleanup:
     if (NULL != current_index) git_index_free(current_index);
     if (NULL != new_index) git_index_free(new_index);
     if (NULL != current_commit) git_commit_free(current_commit);
     /** git_commit_free(new_commit) - this is the 'out' */
-    if (NULL != current_tree) git_tree_free(current_tree);
     if (NULL != new_tree) git_tree_free(new_tree);
     return ret_code;
 }
