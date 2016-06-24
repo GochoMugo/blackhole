@@ -297,6 +297,7 @@ bh_git_commit_changes(git_commit **new_commit, bh_git_repository_manager *manage
 
     goto cleanup;
 on_error:
+    *new_commit = NULL;
     goto cleanup;
 cleanup:
     if (NULL != current_commit) git_commit_free(current_commit);
