@@ -3,7 +3,7 @@
 
 #define _GNU_SOURCE
 
-#define assert_ok(expr) assert_int_equal(expr, 0)
+#define assert_ok(expr) assert_int_equal(0 <= expr, 1)
 
 #include <stdarg.h>
 #include <stddef.h>
