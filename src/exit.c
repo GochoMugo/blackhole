@@ -13,12 +13,11 @@
  * @param event The event in consideration
  * @return 1 if run, 0 if not.
  */
-int bh_exit__hook_run(bh_daemon *daemon, int error_code, const char *event) {
+int bh_exit__hook_run(bh_daemon *daemon, const bh_error *error, int error_code, const char *event) {
     int ret_code = 0;
     int run = false;
     int intervals = 10;
     char *interval_key = NULL;
-    const bh_error *bh_err = bh_error_get();
 
     ret_code = asprintf(&interval_key, "intervals:%s", event);
     return_err(ret_code);
@@ -30,12 +29,12 @@ int bh_exit__hook_run(bh_daemon *daemon, int error_code, const char *event) {
 
     /* If the set error and 'error_code' match, we will consider running
      * the hook */
-    if (error_code == bh_err->code) {
+    if (error_code == error->code) {
         ret_code = bh_counter_tick(&run, daemon->paths.counters, event, intervals);
         return_err(ret_code);
 
         if (true == run) {
-            ret_code = bh_hook_exec(daemon, event, bh_err->message);
+            ret_code = bh_hook_exec(daemon, event, error->message);
             return_err(ret_code);
         }
 
@@ -57,34 +56,34 @@ cleanup:
 
 
 void
-bh_exit__hooks(bh_daemon *daemon) {
+bh_exit__hooks(bh_daemon *daemon, const bh_error *error) {
     int ret_code = 0;
     int runs = 0;
-    const bh_error *bh_err = bh_error_get();
 
-    if (NULL != bh_err) {
-        ret_code = bh_exit__hook_run(daemon, BH_GITERR_PULL_ORIGIN, BH_EVENT_PULLERRORS);
+    if (NULL != error) {
+        ret_code = bh_exit__hook_run(daemon, error, BH_GITERR_PULL_ORIGIN, BH_EVENT_PULLERRORS);
         runs += ret_code;
 
-        ret_code = bh_exit__hook_run(daemon, BH_GITERR_MERGE_CONFLICTS, BH_EVENT_MERGECONFLICTSERRORS);
+        ret_code = bh_exit__hook_run(daemon, error, BH_GITERR_MERGE_CONFLICTS, BH_EVENT_MERGECONFLICTSERRORS);
         runs += ret_code;
 
-        ret_code = bh_exit__hook_run(daemon, BH_GITERR_PUSH_ORIGIN, BH_EVENT_PUSHORIGINERRORS);
+        ret_code = bh_exit__hook_run(daemon, error, BH_GITERR_PUSH_ORIGIN, BH_EVENT_PUSHORIGINERRORS);
         runs += ret_code;
 
-        ret_code = bh_exit__hook_run(daemon, BH_GITERR_PUSH_REMOTE, BH_EVENT_PUSHREMOTEERRORS);
+        ret_code = bh_exit__hook_run(daemon, error, BH_GITERR_PUSH_REMOTE, BH_EVENT_PUSHREMOTEERRORS);
         runs += ret_code;
 
         /* If no other hook has been executed for the set error, we execute the
          * fatal.errors hook */
-        if (0 == runs) bh_hook_exec(daemon, BH_EVENT_FATALERRORS, bh_err->message);
+        if (0 == runs) bh_hook_exec(daemon, BH_EVENT_FATALERRORS, error->message);
     }
     /* Any other hooks, not necessarily for errors, can be added */
 }
 
 
-void bh_exit(bh_daemon *daemon, int success) {
-    bh_exit__hooks(daemon);
+void bh_exit(bh_daemon *daemon, bh_error *error) {
+    bh_exit__hooks(daemon, error);
     bh_daemon_free(&daemon);
-    exit(true == success ? EXIT_SUCCESS : EXIT_FAILURE);
+    bh_error_free(&error);
+    exit(NULL == error ? EXIT_SUCCESS : EXIT_FAILURE);
 }

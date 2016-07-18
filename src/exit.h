@@ -9,10 +9,11 @@
 /**
  * Exit BH
  *
- * @param success Exit successfully if success is true. Otherwise failure
+ * @param daemon Daemon
+ * @param error Error
  */
 void
-bh_exit(bh_daemon *daemon, int success);
+bh_exit(bh_daemon *daemon, bh_error *error);
 
 
 #endif

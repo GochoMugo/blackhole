@@ -22,8 +22,11 @@ void bh_print_ok(void);
 
 /**
  * Print the status of the global error variable
+ *
+ * @param daemon Daemon
+ * @param error Current error
  */
-void bh_print_status(bh_daemon *daemon);
+void bh_print_status(bh_daemon *daemon, const bh_error *error);
 
 
 /**
