@@ -151,4 +151,23 @@ void bh_error_clear(void);
  */
 int bh_error_class(int error_code, int error_class, int error_end);
 
+
+/**
+ * Copy the currently-set error into `out`. If no error has been set,
+ * `out` is assigned `NULL`.
+ *
+ * @param out Destination
+ * @return Return code
+ */
+int bh_error_copy(bh_error **out);
+
+
+/**
+ * Free a copied error object. This should be called, usually when
+ * `bh_error_copy()` is used, to ensure memory is not leaked.
+ *
+ * @param error Error to free
+ */
+void bh_error_free(bh_error **error);
+
 #endif

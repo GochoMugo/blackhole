@@ -66,3 +66,43 @@ bh_error_class(int error_code, int error_class, int error_end) {
     int length = error_end - error_class;
     return diff >= 0 && diff < length ? true : false;
 }
+
+
+int
+bh_error_copy(bh_error **out) {
+    int ret_code = 0;
+    bh_error *e;
+
+    if (NULL == bh_err.message) {
+        *out = NULL;
+        return_ok(ret_code);
+    }
+
+    e = malloc(sizeof(bh_error));
+    if (NULL == e) {
+        return_err_now(BH_DAEMONERR_NOMEM);
+    }
+
+    e->code = bh_err.code;
+
+    ret_code = asprintf(&(e->message), "%s", bh_err.message);
+    return_err(ret_code);
+
+    *out = e;
+
+    goto cleanup;
+on_error:
+    goto cleanup;
+cleanup:
+    return ret_code;
+}
+
+
+void
+bh_error_free(bh_error **error) {
+    bh_error *e = *error;
+    if (NULL == e) return;
+    if (NULL != e->message) free(e->message);
+    free(e);
+    *error = NULL;
+}

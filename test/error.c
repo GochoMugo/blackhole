@@ -164,3 +164,42 @@ void tests_bh_error_class_true(void **state) {
 void tests_bh_error_class_false(void **state) {
     assert_false(bh_error_class(BH_GITERR_PULL_ORIGIN, BH_DAEMONERR, BH_DAEMONERR_END));
 }
+
+
+/**
+ * `bh_error_copy()` copies the alredy-set error into a new error struct.
+ */
+void tests_bh_error_copy_ok(void **state) {
+    bh_error *error = NULL;
+    bh_error_set(BH_ERR);
+    assert_ok(bh_error_copy(&error));
+    assert_int_equal(error->code, BH_ERR);
+    assert_string_equal(error->message, bh_error_get()->message);
+    bh_error_free(&error);
+}
+
+
+/**
+ * `bh_error_copy()` assigns `NULL` if no error is currently set.
+ */
+void tests_bh_error_copy_null(void **state) {
+    bh_error *error;
+    assert_ok(bh_error_copy(&error));
+    assert_null(error);
+    bh_error_free(&error);
+}
+
+
+/**
+ * `bh_error_free()` frees a copied error struct. And without freeing the
+ * original error struct.
+ */
+void tests_bh_error_free_frees(void **state) {
+    bh_error *error = NULL;
+    bh_error_set(BH_ERR);
+    assert_ok(bh_error_copy(&error));
+    assert_non_null(error);
+    bh_error_free(&error);
+    assert_null(error);
+    assert_non_null(bh_error_get());
+}
