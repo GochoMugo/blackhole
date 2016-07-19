@@ -18,7 +18,7 @@ bh_print_ok(void) {
 
 
 void
-bh_print_status(bh_daemon *daemon, const bh_error *error) {
+bh_print_status(const bh_error *error) {
    if (NULL == error) {
         bh_print_ok();
         return;
@@ -43,6 +43,6 @@ bh_print_status_and_exit(bh_daemon *daemon) {
     /** copy the error to ensure it is not cleared by other functions */
     bh_error_copy(&error);
 
-    bh_print_status(daemon, error);
+    bh_print_status(error);
     bh_exit(daemon, error);
 }
