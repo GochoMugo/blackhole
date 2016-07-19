@@ -21,6 +21,7 @@
 #include "error.h"
 #include "git.h"
 #include "hook.h"
+#include "print.h"
 #include "status.h"
 
 #endif

@@ -40,6 +40,7 @@ chmod -r "${counter_unreadable}"
 
 exes=(
     "data/noop"
+    "data/bh-print/run"
     "data/bh-status/run"
 )
 for exe in ${exes[@]}
