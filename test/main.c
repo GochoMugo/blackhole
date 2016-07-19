@@ -1,3 +1,4 @@
+/* test!skip-gen */
 #include "main.h"
 
 int main(void) {

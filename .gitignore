@@ -12,5 +12,3 @@ build/
 test/data/**/*.tmp.counter
 test/data/**/*.out
 test/data/bh-git/.gitignore
-test/*.h
-!test/main.h
