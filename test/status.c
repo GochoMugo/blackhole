@@ -36,24 +36,5 @@ int tests_bh_status_teardown_each(void **state) {
 void tests_bh_status_print_ok(void **state) {
     char *cmd = path_join(path, "run.out");
     char *path_output = path_join(path, "output.txt");
-    FILE *file_actual = popen(cmd, "r");
-    FILE *file_expected = fopen(path_output, "r");
-    char *line_actual, *line_expected;
-    size_t size_actual = 0, size_expected = 0;
-    size_t read_actual, read_expected;
-
-    assert_non_null(file_actual);
-    assert_non_null(file_expected);
-
-    /* compare the two streams line by line */
-    while (1) {
-        read_actual = getline(&line_actual, &size_actual, file_actual);
-        read_expected = getline(&line_expected, &size_expected, file_expected);
-        if (EOF == read_expected) break;
-        assert_int_equal(read_actual, read_expected);
-        assert_string_equal(line_actual, line_expected);
-    }
-
-    pclose(file_actual);
-    fclose(file_expected);
+    assert_output_equal(cmd, path_output);
 }

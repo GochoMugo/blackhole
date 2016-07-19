@@ -13,6 +13,7 @@
 #include <cmocka.h>
 
 #include "../src/main.h"
+#include "util.h"
 
 #include "config.h"
 #include "counter.h"
