@@ -15,7 +15,7 @@ git_init=(
 for repo in ${git_init[@]}
 do
     [[ -d "${repo}/.git" ]] && continue
-    git init "${repo}"
+    git init --quiet "${repo}"
 done
 
 
@@ -24,12 +24,12 @@ git_commit=(
 )
 for repo in ${git_commit[@]}
 do
-    pushd "${repo}"
-    git rev-parse HEAD > /dev/null 2>&1 && { popd; continue; }
+    pushd "${repo}" > /dev/null
+    git rev-parse HEAD > /dev/null 2>&1 && { popd > /dev/null; continue; }
     touch .gitkeep
     git add .gitkeep
-    git commit -m "root commit (for testing)"
-    popd
+    git commit -m "root commit (for testing)" > /dev/null
+    popd > /dev/null
 done
 
 
