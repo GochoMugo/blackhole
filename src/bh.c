@@ -36,6 +36,6 @@ main(int argc, const char **argv) {
 on_error:
     goto cleanup;
 cleanup:
-    bh_exit(daemon, true);
+    bh_exit(daemon, NULL);
     return ret_code;
 }
