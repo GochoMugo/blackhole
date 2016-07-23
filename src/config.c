@@ -42,11 +42,9 @@ bh_config_new(bh_config **config, const char* rootdir) {
 
     *config = c;
 
-    goto cleanup;
-on_error:
+_on_error
     if (NULL != c) bh_config_free(&c);
-    goto cleanup;
-cleanup:
+_cleanup
     if (NULL != bh_path) free(bh_path);
     if (NULL != config_path) free(config_path);
     return ret_code;

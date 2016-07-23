@@ -32,10 +32,8 @@ bh_hook_exec(const bh_daemon *daemon, const char *event, const char *message) {
     }
     ret_code = 0; /* `system()` above sets to exit code of command */
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     if (NULL != command) free(command);
     if (NULL != path) free(path);
     return ret_code;

@@ -23,19 +23,17 @@ main(int argc, const char **argv) {
 
     if (0 != do_status) {
         bh_status_print(daemon);
-        goto cleanup;
+        return_ok(ret_code);
     }
 
     if (0 != do_sync) {
         ret_code = bh_run_sync(daemon);
         return_err(ret_code);
-        goto cleanup;
+        return_ok(ret_code);
     }
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     bh_exit(daemon, NULL);
     return ret_code;
 }

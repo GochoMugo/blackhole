@@ -59,13 +59,11 @@ bh_git_repository_manager_new(bh_git_repository_manager **manager,
 
     *manager = mgr;
 
-    goto cleanup;
-on_error:
+_on_error
     /** free(remotes) - bh_git_repository_manager_free() does it for us */
     if (NULL != mgr) bh_git_repository_manager_free(&mgr);
     *manager = NULL;
-    goto cleanup;
-cleanup:
+_cleanup
     /** free(remotes) - bh_git_repository_manager_free() does it for us, once
      * user frees the manager after use */
     git_strarray_free(&remote_names);
@@ -120,10 +118,8 @@ bh_git_fetch_origin(bh_git_repository_manager *manager) {
     }
     return_err(ret_code);
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     return ret_code;
 }
 
@@ -206,11 +202,9 @@ bh_git_merge_origin(git_commit **out, bh_git_repository_manager *manager) {
     /** Leave the commit to the caller */
     *out = new_commit;
 
-    goto cleanup;
-on_error:
+_on_error
     *out = NULL;
-    goto cleanup;
-cleanup:
+_cleanup
     if (NULL != current_index) git_index_free(current_index);
     if (NULL != new_index) git_index_free(new_index);
     if (NULL != current_commit) git_commit_free(current_commit);
@@ -295,11 +289,9 @@ bh_git_commit_changes(git_commit **new_commit, bh_git_repository_manager *manage
     ret_code = git_commit_lookup(new_commit, manager->repository, &new_commit_id);
     return_err(ret_code);
 
-    goto cleanup;
-on_error:
+_on_error
     *new_commit = NULL;
-    goto cleanup;
-cleanup:
+_cleanup
     if (NULL != current_commit) git_commit_free(current_commit);
     if (NULL != current_tree) git_tree_free(current_tree);
     if (NULL != current_index) git_index_free(current_index);
@@ -354,10 +346,8 @@ bh_git_push(bh_git_repository_manager *manager, git_reference *current_ref, int 
         }
     }
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     if (0 != refspecs.count) git_strarray_free(&refspecs);
     return ret_code;
 }
@@ -389,10 +379,8 @@ bh_git_checkout_branch(bh_git_repository_manager *manager, const char *branch_na
     /** Checkout the branch */
     /** Set upstream */
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     if (NULL != current_commit) git_commit_free(current_commit);
     if (NULL != machine_branch_ref) git_reference_free(machine_branch_ref);
     if (NULL != ref_name) free(ref_name);
@@ -425,10 +413,8 @@ bh_git_is_dirty(int *out, bh_git_repository_manager *manager) {
 
     *out = is_dirty;
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     if (NULL != diff_stats) git_diff_stats_free(diff_stats);
     if (NULL != diff) git_diff_free(diff);
     return ret_code;
@@ -446,10 +432,8 @@ bh_git__current_commit_lookup(git_commit **current_commit, bh_git_repository_man
     ret_code = git_commit_lookup(current_commit, manager->repository, &current_commit_id);
     return_err(ret_code);
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     return ret_code;
 }
 
@@ -473,10 +457,8 @@ bh_git__update_ref(bh_git_repository_manager *manager, const char *ref_name, git
     ret_code = git_reference_set_target(&new_master_ref, real_master_ref, commit_id, reflog);
     return_err(ret_code);
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     if (NULL != current_master_ref) git_reference_free(current_master_ref);
     if (NULL != real_master_ref) git_reference_free(real_master_ref);
     if (NULL != new_master_ref) git_reference_free(new_master_ref);

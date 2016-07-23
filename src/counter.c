@@ -61,11 +61,9 @@ bh_counter__file(FILE **out,
 
     *out = file;
 
-    goto cleanup;
-on_error:
+_on_error
     if (NULL != file) fclose(file);
-    goto cleanup;
-cleanup:
+_cleanup
     if (NULL != path) free(path);
     return ret_code;
 }
@@ -100,10 +98,8 @@ bh_counter__get(int *out, FILE *file) {
 
     *out = count;
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     return ret_code;
 }
 
@@ -128,10 +124,8 @@ bh_counter_get(int *out, const char *counters_path, const char *event) {
     ret_code = bh_counter__get(out, file);
     return_err(ret_code);
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     if (NULL != file) fclose(file);
     return ret_code;
 }
@@ -160,10 +154,8 @@ bh_counter_increment(int *out, const char *counters_path, const char *event) {
     *out = count;
     ret_code = 0;
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     if (NULL != file) fclose(file);
     return ret_code;
 }
@@ -182,10 +174,8 @@ bh_counter_reset(const char *counters_path, const char *event) {
     if (ENOENT == errno) ret_code = 0;
     return_err_ext(ret_code, BH_COUNTERERR_UNLINK);
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     if (NULL != path) free(path);
     return ret_code;
 }
@@ -202,9 +192,7 @@ bh_counter_tick(int *tick, const char *path, const char *event,
 
     *tick = 0 == ((count-1) % intervals) ? true : false;
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     return ret_code;
 }

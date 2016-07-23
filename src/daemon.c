@@ -40,11 +40,9 @@ bh_daemon_new(bh_daemon **daemon, const char *path) {
 
     *daemon = d;
 
-    goto cleanup;
-on_error:
+_on_error
     if (NULL != d) bh_daemon_free(&d);
-    goto cleanup;
-cleanup:
+_cleanup
     return ret_code;
 }
 

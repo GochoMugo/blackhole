@@ -46,10 +46,8 @@ int bh_exit__hook_run(bh_daemon *daemon, const bh_error *error, int error_code, 
         ret_code = 0;
     }
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     if (NULL != interval_key) free(interval_key);
     return ret_code;
 }

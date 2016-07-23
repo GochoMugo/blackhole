@@ -90,10 +90,8 @@ bh_error_copy(bh_error **out) {
 
     *out = e;
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     return ret_code;
 }
 

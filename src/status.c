@@ -50,10 +50,8 @@ bh_status_print(bh_daemon *daemon) {
         cc_fprintf(CC_FG_WHITE, stdout, "%d\n", push_remote_errors);
     puts("");
 
-    goto cleanup;
-on_error:
-    goto cleanup;
-cleanup:
+_on_error
+_cleanup
     if (NULL != current_ref) git_reference_free(current_ref);
     /** if (NULL != branch_name) free(branch_name); - git_reference_free()
      * above does it for us */
