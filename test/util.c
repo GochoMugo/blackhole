@@ -24,3 +24,8 @@ void assert_output_equal(const char *executable, const char *output_filepath) {
     pclose(file_actual);
     fclose(file_expected);
 }
+
+
+void tests_common_reset() {
+    bh_error_clear();
+}

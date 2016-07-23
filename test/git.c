@@ -72,6 +72,7 @@ int tests_bh_git_setup_each(void **state) {
     assert_non_null(new_state->manager);
 
     *state = new_state;
+    tests_common_reset();
     return 0;
 }
 

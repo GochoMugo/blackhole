@@ -14,6 +14,7 @@ int tests_bh_daemon_setup_each(void **state) {
     assert_non_null(TEST_DIR);
     assert_non_null(path);
     assert_non_null(d);
+    tests_common_reset();
     return 0;
 }
 

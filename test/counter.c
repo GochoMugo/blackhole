@@ -14,6 +14,7 @@ int tests_bh_counter_setup_each(void **state) {
     }
 
     assert_non_null(path_counters);
+    tests_common_reset();
     return 0;
 }
 

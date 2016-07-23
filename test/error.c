@@ -14,6 +14,7 @@ void common_reset(void) {
 
 int tests_bh_error_setup_each(void **state) {
     common_reset();
+    tests_common_reset();
     return 0;
 }
 

@@ -18,6 +18,7 @@ int tests_bh_hook_setup_each(void **state) {
 
     assert_non_null(path);
     assert_non_null(daemon_hooks);
+    tests_common_reset();
     return 0;
 }
 

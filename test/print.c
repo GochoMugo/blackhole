@@ -13,6 +13,7 @@ int tests_bh_print_setup_each(void **state) {
     }
 
     assert_non_null(path);
+    tests_common_reset();
     return 0;
 }
 

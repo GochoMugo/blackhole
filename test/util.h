@@ -11,4 +11,11 @@
  */
 void assert_output_equal(const char *executable, const char *output_filepath);
 
+
+/**
+ * Perform common resets for test cases. This is preferrably run before the
+ * each test case.
+ */
+void tests_common_reset(void);
+
 #endif
