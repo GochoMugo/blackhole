@@ -21,18 +21,12 @@ void bh_print_ok(void);
 
 
 /**
- * Print the status of the global error variable
+ * Print the error message, from 'error'.
+ * If 'error' is NULL, nothing is printed.
  *
  * @param error Current error
  */
-void bh_print_status(const bh_error *error);
-
-
-/**
- * Print the status, as in `print_status()`, and exit with EXIT_FAILURE
- * if the global error variable is set
- */
-void bh_print_status_and_exit(bh_daemon *daemon);
+void bh_print_error(const bh_error *error);
 
 
 #endif
