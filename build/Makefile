@@ -11,6 +11,7 @@ ECHO         = $(SCRIPTS)/echo-task.sh
 
 CFLAGS      += `pkg-config --cflags libgit2 libiniparser` -I$(ROOT)/deps/
 CFLAGS      += --std=c99 -Wall -pedantic
+CFLAGS      += -D"LIBINIPARSER_VERSION=\"`pkg-config --modversion libiniparser || echo ?`\""
 LIBS         = `pkg-config --libs libgit2 libiniparser`
 SRC          = $(ROOT)/src/*.c $(ROOT)/deps/**/*.c
 OUT          = $(PWD)/src
