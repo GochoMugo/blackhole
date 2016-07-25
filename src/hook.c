@@ -11,7 +11,6 @@ bh_hook_exec(const bh_daemon *daemon, const char *event, const char *message) {
     char *path = NULL;
     char *command = NULL;
     int exit_status = 0;
-    size_t len = 0;
 
     path = path_join(daemon->paths.hooks, event);
     if (NULL == path) {
