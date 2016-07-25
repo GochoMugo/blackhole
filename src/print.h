@@ -15,6 +15,12 @@ void bh_print_marker(const char *message);
 
 
 /**
+ * Print the end line.
+ */
+void bh_print_end(void);
+
+
+/**
  * Print 'ok' to indicate success.
  */
 void bh_print_ok(void);

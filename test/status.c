@@ -37,5 +37,5 @@ int tests_bh_status_teardown_each(void **state) {
 void tests_bh_status_print_ok(void **state) {
     char *cmd = path_join(path, "run.out");
     char *path_output = path_join(path, "output.txt");
-    assert_output_equal(cmd, path_output);
+    assert_output_equal(cmd, path_output, 0);
 }

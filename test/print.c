@@ -32,5 +32,5 @@ void tests_bh_print_ok(void **state) {
     /* we need to redirect stderr to stdout for popen to catch it */
     char *cmd = path_join(path, "run.out 2>&1");
     char *path_output = path_join(path, "output.txt");
-    assert_output_equal(cmd, path_output);
+    assert_output_equal(cmd, path_output, 1);
 }

@@ -2,7 +2,7 @@
 #include "main.h"
 
 
-void assert_output_equal(const char *executable, const char *output_filepath) {
+void assert_output_equal(const char *executable, const char *output_filepath, int mode) {
     FILE *file_actual = popen(executable, "r");
     FILE *file_expected = fopen(output_filepath, "r");
     char *line_actual, *line_expected;
@@ -17,8 +17,15 @@ void assert_output_equal(const char *executable, const char *output_filepath) {
         read_actual = getline(&line_actual, &size_actual, file_actual);
         read_expected = getline(&line_expected, &size_expected, file_expected);
         if (read_actual == read_expected && EOF == read_expected) break;
-        assert_int_equal(read_actual, read_expected);
-        assert_string_equal(line_actual, line_expected);
+        switch (mode) {
+        case 0:
+            assert_int_equal(read_actual, read_expected);
+            assert_string_equal(line_actual, line_expected);
+            break;
+        case 1:
+            assert_true(read_actual >= read_expected);
+            assert_non_null(strstr(line_actual, line_expected));
+        }
     }
 
     pclose(file_actual);

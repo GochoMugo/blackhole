@@ -79,6 +79,7 @@ bh_run_sync(bh_daemon *daemon) {
 
 _on_error
 _cleanup
+    bh_print_end();
     if (NULL != new_commit_after_merge) git_commit_free(new_commit_after_merge);
     if (NULL != new_commit_after_commit) git_commit_free(new_commit_after_commit);
     if (NULL != current_ref) git_reference_free(current_ref);

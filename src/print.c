@@ -7,7 +7,17 @@
 
 void
 bh_print_marker(const char *message) {
-    printf("# %s: ", message);
+    time_t n = time(NULL);
+    struct tm *now = localtime(&n);
+    char now_str[32];
+    strftime(now_str, 32, "%FT%T%z", now);
+    printf("%s # %s: ", now_str, message);
+}
+
+
+void
+bh_print_end(void) {
+    puts("------------------------");
 }
 
 
