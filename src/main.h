@@ -29,7 +29,9 @@
 #define return_err_ext(result, custom_err) if (0 > result) { ret_code = custom_err; bh_error_set(ret_code); goto on_error; }
 #define return_err_now(custom_err) { ret_code = custom_err; bh_error_set(ret_code); goto on_error; }
 
+#include <assert.h>
 #include <errno.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,7 +48,6 @@
 #include "config.h"
 #include "counter.h"
 #include "daemon.h"
-#include "exit.h"
 #include "git.h"
 #include "hook.h"
 #include "print.h"

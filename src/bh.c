@@ -22,18 +22,17 @@ main(int argc, const char **argv) {
     return_err(ret_code);
 
     if (0 != do_status) {
-        bh_status_print(daemon);
-        return_ok(ret_code);
+        ret_code = bh_status_print(daemon);
+        return_err(ret_code);
     }
 
     if (0 != do_sync) {
         ret_code = bh_run_sync(daemon);
         return_err(ret_code);
-        return_ok(ret_code);
     }
 
 _on_error
 _cleanup
-    bh_exit(daemon, NULL);
-    return ret_code;
+    bh_daemon_free(&daemon);
+    return 0 <= ret_code ? EXIT_SUCCESS : EXIT_FAILURE;
 }
