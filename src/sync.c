@@ -114,6 +114,7 @@ bh_sync__handle_error(const bh_daemon *daemon, const char *event) {
 
 _on_error
 _cleanup
+    if (NULL != error) bh_error_free(&error);
     return ret_code;
 }
 
