@@ -84,6 +84,7 @@ bh_error_copy(bh_error **out) {
     }
 
     e->code = bh_err.code;
+    e->message = NULL;
 
     ret_code = asprintf(&(e->message), "%s", bh_err.message);
     return_err(ret_code);
@@ -91,6 +92,7 @@ bh_error_copy(bh_error **out) {
     *out = e;
 
 _on_error
+    if (NULL != e) bh_error_free(&e);
 _cleanup
     return ret_code;
 }
