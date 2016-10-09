@@ -6,7 +6,6 @@ deps/
 
 # build artefacts
 build/
-!build/Makefile
 
 # test artefacts
 test/data/**/*.tmp.counter

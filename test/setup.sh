@@ -46,5 +46,6 @@ exes=(
 for exe in ${exes[@]}
 do
     [[ -e "${exe}.out" ]] && [[ "${exe}.out" -nt "${exe}.c" ]] && continue
-    ${CC} -o "${exe}.out" "${exe}.c" ${CFLAGS} ${LIBS}
+    echo ${BIN_DIR}
+    gcc -o "${exe}.out" "${exe}.c" -L"${BIN_DIR}" -lblackhole `pkg-config --libs libgit2 libiniparser`
 done
