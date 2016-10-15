@@ -33,13 +33,11 @@ add_dependencies(bh-tests blackhole pre-bh-tests)
 add_custom_target(run-tests
     COMMAND BIN_DIR=${CMAKE_CURRENT_BINARY_DIR}
         ./setup.sh
-    COMMAND TEST_DIR=${CMAKE_CURRENT_SOURCE_DIR}/test
+    COMMAND TEST_DIR=${root_dir}/test
         ${CMAKE_CURRENT_BINARY_DIR}/bh-tests
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
+    WORKING_DIRECTORY ${root_dir}/test)
 add_dependencies(run-tests bh-tests)
 
 # task: cleaning after tests
-set(test_dirt test/data/*.tmp.counter test/data/*.git
-        test/data/*.out test/data/bh-git/.gitignore)
 add_custom_target(clean-tests
-    COMMAND SRC_DIR=${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/script/clean-tests.sh)
+    COMMAND SRC_DIR=${root_dir} ${root_dir}/script/clean-tests.sh)
