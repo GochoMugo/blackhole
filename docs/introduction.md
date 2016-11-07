@@ -38,20 +38,23 @@ The dependencies used in the project:
 <a name="build"></a>
 ## build and install:
 
+We are using [CMake][cmake] to build the project:
+
 1. Ensure you have installed the dependencies [above](#deps) and that they
-   are discovarable using `pkg-config`.
+   are discovarable to `cmake`.
    * **Note**: `make pc`: places the pkg-config config files in `misc/` i.e.
    `misc/*.pc` in `/usr/local/lib/pkgconfig/`.
-1. Get the source code e.g. clone the repository
 1. `clib install`
-1. `cd blackhole/build`
-1. `make`
+1. `mkdir build`
+1. `cmake ..`
 1. `make install`
 
 On a successful build, the executable will be placed at `${PREFIX}/bin/bh`.
 `${PREFIX}` defaults to `/usr/local`.
 
 Run `bh --help` to ensure it is working fine.
+
+[cmake]:https://cmake.org/
 
 
 <a name="setup"></a>
