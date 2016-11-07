@@ -3,7 +3,7 @@ project(blackhole)
 
 # general configurations
 add_definitions(-DLIBINIPARSER_VERSION="?")
-set(CMAKE_C_FLAGS "--std=c99")
+set(CMAKE_C_FLAGS "--std=c99 -Wall -pedantic")
 set(root_dir ${CMAKE_CURRENT_SOURCE_DIR})
 set(deps iniparser git2)
 set(test_deps blackhole ${deps} cmocka)
