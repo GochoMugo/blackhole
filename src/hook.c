@@ -12,10 +12,8 @@ bh_hook_exec(const bh_daemon *daemon, const char *event, const char *message) {
     char *command = NULL;
     int exit_status = 0;
 
-    path = path_join(daemon->paths.hooks, event);
-    if (NULL == path) {
-        return_err_now(BH_DAEMONERR_PATHRESLV);
-    }
+    ret_code = contra_path_join(&path, daemon->paths.hooks, event);
+    return_err_ext(ret_code, BH_DAEMONERR_PATHRESLV);
 
     ret_code = asprintf(&command, "%s '%s' '%s' '%s'", path, message,
             daemon->config->name, daemon->config->path);

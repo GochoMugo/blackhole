@@ -23,8 +23,8 @@ bh_counter__file(FILE **out,
     char *path = NULL;
     FILE *file = NULL;
 
-    path = path_join(counters_path, event);
-    if (NULL == path) return_err_now(BH_DAEMONERR_PATHRESLV);
+    ret_code = contra_path_join(&path, counters_path, event);
+    return_err_ext(ret_code, BH_DAEMONERR_PATHRESLV);
 
     file = fopen(path, "r+");
     /* if we have successfully opened the file, we return ok */
@@ -166,8 +166,8 @@ bh_counter_reset(const char *counters_path, const char *event) {
     int ret_code = 0;
     char *path = NULL;
 
-    path = path_join(counters_path, event);
-    if (NULL == path) return_err_now(BH_DAEMONERR_PATHRESLV);
+    ret_code = contra_path_join(&path, counters_path, event);
+    return_err_ext(ret_code, BH_DAEMONERR_PATHRESLV);
 
     ret_code = unlink(path);
     /* if the error is due to the file being non-existent, we ignore it */

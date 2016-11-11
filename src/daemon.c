@@ -23,11 +23,11 @@ bh_daemon_new(bh_daemon **daemon, const char *path) {
     return_err(ret_code);
 
     /* Resolve internal path to 'counters' directory */
-    d->paths.counters = path_join(d->config->runstate_path, "counters");
+    ret_code = contra_path_join(&(d->paths.counters), d->config->runstate_path, "counters");
     if (NULL == d->paths.counters) return_err_now(BH_DAEMONERR_PATHRESLV);
 
     /* Resolve internal path to 'counters' */
-    d->paths.hooks = path_join(d->config->runstate_path, "hooks");
+    ret_code = contra_path_join(&(d->paths.hooks), d->config->runstate_path, "hooks");
     if (NULL == d->paths.hooks) return_err_now(BH_DAEMONERR_PATHRESLV);
 
     /* Create a new repository manager */

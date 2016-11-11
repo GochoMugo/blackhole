@@ -28,8 +28,11 @@ bh_config_new(bh_config **config, const char* rootdir) {
     return_err_ext(ret_code, BH_DAEMONERR_PATHRESLV);
     ret_code = 0;
 
-    bh_path = path_join(c->path, BH_PATH_ROOTDIR);
-    config_path = path_join(bh_path, BH_PATH_CONFIG);
+    ret_code = contra_path_join(&bh_path, c->path, BH_PATH_ROOTDIR);
+    return_err_ext(ret_code, BH_DAEMONERR_PATHRESLV);
+
+    ret_code = contra_path_join(&config_path, bh_path, BH_PATH_CONFIG);
+    return_err_ext(ret_code, BH_DAEMONERR_PATHRESLV);
 
     c->dict = iniparser_load(config_path);
     if (NULL == c->dict) {
@@ -38,7 +41,9 @@ bh_config_new(bh_config **config, const char* rootdir) {
 
     c->name = iniparser_getstring(c->dict, "daemon:name", BH_DAEMON_DEFAULT_NAME);
     c->email = iniparser_getstring(c->dict, "daemon:email", BH_DAEMON_DEFAULT_EMAIL);
-    c->runstate_path = path_join(bh_path, iniparser_getstring(c->dict, "runstate:path", ""));
+
+    ret_code = contra_path_join(&(c->runstate_path), bh_path, iniparser_getstring(c->dict, "runstate:path", ""));
+    return_err_ext(ret_code, BH_DAEMONERR_PATHRESLV);
 
     *config = c;
 

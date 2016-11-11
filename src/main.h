@@ -40,7 +40,6 @@
 #include <iniparser.h>
 #include <contra.h>
 
-#include "../deps/path-join/path-join.h"
 #include "../deps/flag/flag.h"
 #include "../deps/mkdirp/mkdirp.h"
 #include "../deps/console-colors/console-colors.h"

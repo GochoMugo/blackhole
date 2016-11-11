@@ -36,3 +36,12 @@ void assert_output_equal(const char *executable, const char *output_filepath, in
 void tests_common_reset() {
     bh_error_clear();
 }
+
+
+char *path_join(const char *segment1, const char *segment2) {
+    int ret_code = 0;
+    char *path = NULL;
+
+    ret_code = contra_path_join(&path, segment1, segment2);
+    return path;
+}

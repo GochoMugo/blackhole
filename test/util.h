@@ -23,4 +23,16 @@ void assert_output_equal(const char *executable, const char *output_filepath, in
  */
 void tests_common_reset(void);
 
+
+/**
+ * Join two path segments. This is here to ensure we do NOT have to
+ * change all current occurrences of 'path_join' to 'contra_path_join'.
+ *
+ * @param  segment1
+ * @param  segment2
+ * @return Joined path
+ */
+char *path_join(const char *segment1, const char *segment2);
+
+
 #endif
