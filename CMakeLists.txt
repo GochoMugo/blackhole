@@ -27,7 +27,7 @@ file(GLOB test_src_exe test/*.c)
 add_custom_target(pre-bh-tests
     COMMAND ${root_dir}/script/gen-test-headers.sh ${test_src_exe}
     COMMENT "generating test header files")
-add_executable(bh-tests ${test_src_exe})
+add_executable(bh-tests EXCLUDE_FROM_ALL ${test_src_exe})
 target_link_libraries(bh-tests ${test_deps})
 add_dependencies(bh-tests blackhole pre-bh-tests)
 
