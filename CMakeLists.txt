@@ -2,10 +2,12 @@ cmake_minimum_required(VERSION 3.6)
 project(blackhole)
 
 # general configurations
+include(${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 add_definitions(-DLIBINIPARSER_VERSION="?")
 set(CMAKE_C_FLAGS "--std=c99 -Wall -pedantic")
 set(root_dir ${CMAKE_CURRENT_SOURCE_DIR})
-set(deps iniparser git2)
+set(deps iniparser git2 contra)
 set(test_deps blackhole ${deps} cmocka)
 
 # library
@@ -34,7 +36,7 @@ add_custom_target(run-tests
     COMMAND BIN_DIR=${CMAKE_CURRENT_BINARY_DIR}
         ./setup.sh
     COMMAND TEST_DIR=${root_dir}/test
-        ${CMAKE_CURRENT_BINARY_DIR}/bh-tests
+        ${CMAKE_CURRENT_BINARY_DIR}/bin/bh-tests
     WORKING_DIRECTORY ${root_dir}/test)
 add_dependencies(run-tests bh-tests)
 

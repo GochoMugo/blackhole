@@ -38,6 +38,7 @@
 #include <time.h>
 #include <git2.h>
 #include <iniparser.h>
+#include <contra.h>
 
 #include "../deps/path-join/path-join.h"
 #include "../deps/flag/flag.h"
