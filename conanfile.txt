@@ -1,5 +1,0 @@
-[requires]
-contra/0.0.0@forfuturellc/contra
-
-[generators]
-cmake

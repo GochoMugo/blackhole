@@ -5,22 +5,6 @@
 #ifndef _BH_main_h_
 #define _BH_main_h_ 1
 
-#define _GNU_SOURCE
-
-#define BH_VERSION "0.0.0-develop"
-
-#define BH_DAEMON_DEFAULT_NAME "blackhole-daemon"
-#define BH_DAEMON_DEFAULT_EMAIL "blackhole-daemon@local"
-
-#define BH_PATH_ROOTDIR ".blackhole"
-#define BH_PATH_CONFIG "config.ini"
-
-#define BH_EVENT_PULLERRORS "pull.errors"
-#define BH_EVENT_MERGECONFLICTSERRORS "merge-conflicts.errors"
-#define BH_EVENT_PUSHORIGINERRORS "push-origin.errors"
-#define BH_EVENT_PUSHREMOTEERRORS "push-remote.errors"
-#define BH_EVENT_FATALERRORS "fatal.errors"
-
 #include <assert.h>
 #include <errno.h>
 #include <stdarg.h>
@@ -30,22 +14,12 @@
 #include <time.h>
 #include <git2.h>
 #include <iniparser.h>
-#include <contra.h>
+#include <contra/contra.h>
 
 #include "../deps/flag/flag.h"
 #include "../deps/mkdirp/mkdirp.h"
 #include "../deps/console-colors/console-colors.h"
 
-#include "error.h"
-#include "types.h"
-#include "config.h"
-#include "counter.h"
-#include "daemon.h"
-#include "git.h"
-#include "hook.h"
-#include "print.h"
-#include "status.h"
-#include "sync.h"
-
+#include "../include/blackhole.h"
 
 #endif

@@ -5,6 +5,6 @@ for f in ${*}
 do
     if [[ -z "$(head -n 10 "${f}" | grep 'test!skip-gen')" ]]
     then
-        echo $f | sed -e s/\.c$/\.h/
+        echo "${f}" | sed -e s/\.c$/\.h\ / | tr -d '\n'
     fi
 done

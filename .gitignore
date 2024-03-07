@@ -3,6 +3,8 @@
 
 # dependencies
 deps/
+!deps/iniparser
+!deps/ligit2
 
 # build artefacts
 build/

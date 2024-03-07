@@ -34,6 +34,7 @@ int tests_bh_hook_teardown_each(void **state) {
  * Use 'test message' for the message; it is expected by the script.
  */
 void tests_bh_hook_exec_ok(void **state) {
+    skip_if_filtered_out("tests_bh_hook_exec_ok");
     assert_ok(bh_hook_exec(daemon_hooks, "hook.sh", "test message"));
 }
 
@@ -43,6 +44,7 @@ void tests_bh_hook_exec_ok(void **state) {
  * is not found/
  */
 void tests_bh_hook_exec_missing(void **state) {
+    skip_if_filtered_out("tests_bh_hook_exec_missing");
     assert_int_equal(bh_hook_exec(daemon_hooks, "404.sh", "missing"), BH_HOOKERR_NO_HOOK);
 }
 
@@ -52,6 +54,7 @@ void tests_bh_hook_exec_missing(void **state) {
  * The script 'fail.sh' exits with a status code of 1.
  */
 void tests_bh_hook_exec_fail(void **state) {
+    skip_if_filtered_out("tests_bh_hook_exec_fail");
     assert_int_equal(bh_hook_exec(daemon_hooks, "fail.sh", "fails"), BH_HOOKERR_FAILED);
 }
 
@@ -61,5 +64,6 @@ void tests_bh_hook_exec_fail(void **state) {
  * the hook fails. The script 'exec.sh' can not be executed.
  */
 void tests_bh_hook_exec_execfail(void **state) {
+    skip_if_filtered_out("tests_bh_hook_exec_execfail");
     skip();
 }

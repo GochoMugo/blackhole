@@ -1,8 +1,7 @@
 #include "main.h"
 
-
+#define get_state() state_t *s = (state_t*) *state; execute_script(path_script_reset);
 #define skip_if_no_network() if (true == no_network) skip();
-#define get_state() state_t *s = (state_t*) *state;
 
 static int no_network = -1;
 static bh_daemon *daemon_git = NULL;
@@ -59,8 +58,6 @@ int tests_bh_git_setup_each(void **state) {
     }
     assert_non_null(path_script_reset);
 
-    execute_script(path_script_reset);
-
     if (NULL == daemon_git) {
         int ret_code = bh_daemon_new(&daemon_git, path);
         config = daemon_git->config;
@@ -78,7 +75,7 @@ int tests_bh_git_setup_each(void **state) {
 
 
 int tests_bh_git_teardown_each(void **state) {
-    get_state();
+    state_t *s = (state_t*) *state;
     bh_git_repository_manager_free(&(s->manager));
     free(s);
     bh_error_clear();
@@ -91,6 +88,7 @@ int tests_bh_git_teardown_each(void **state) {
  * Check all the properties to ensure they are set correctly.
  */
 void tests_bh_git_repository_manager_new_ok(void **state) {
+    skip_if_filtered_out("tests_bh_git_repository_manager_new_ok");
     get_state();
     assert_non_null(s->manager->repository);
     assert_non_null(s->manager->remotes);
@@ -104,6 +102,7 @@ void tests_bh_git_repository_manager_new_ok(void **state) {
  * a null path is given.
  */
 void tests_bh_git_repository_manager_new_null_path(void **state) {
+    skip_if_filtered_out("tests_bh_git_repository_manager_new_null_path");
     bh_git_repository_manager *new_manager;
     bh_config *new_config = NULL;
     assert_ok(bh_config_new(&new_config, path));
@@ -121,6 +120,7 @@ void tests_bh_git_repository_manager_new_null_path(void **state) {
  * Ensure it is NULL afterwards.
  */
 void tests_bh_git_repository_free_ok(void **state) {
+    skip_if_filtered_out("tests_bh_git_repository_free_ok");
     get_state();
     bh_git_repository_manager_free(&(s->manager));
     assert_null(s->manager);
@@ -134,6 +134,7 @@ void tests_bh_git_repository_free_ok(void **state) {
  * Now run the function and expect to pull a new file in the commit.
  */
 void tests_bh_git_fetch_origin_ok(void **state) {
+    skip_if_filtered_out("tests_bh_git_fetch_origin_ok");
     skip_if_no_network();
     get_state();
     execute_script(path_join(path, "push-new-and-reset.sh"));
@@ -150,6 +151,7 @@ void tests_bh_git_fetch_origin_ok(void **state) {
  * that the old manager has already loaded.
  */
 void tests_bh_git_fetch_origin_bad_origin(void **state) {
+    skip_if_filtered_out("tests_bh_git_fetch_origin_bad_origin");
     skip_if_no_network();
     get_state();
     execute_script(path_join(path, "set-bad-origin.sh"));
@@ -169,6 +171,7 @@ void tests_bh_git_fetch_origin_bad_origin(void **state) {
  * Try merging now.
  */
 void tests_bh_git_merge_origin_ok(void **state) {
+    skip_if_filtered_out("tests_bh_git_merge_origin_ok");
     skip_if_no_network();
     get_state();
     execute_script(path_join(path, "push-3.sh"));
@@ -183,6 +186,7 @@ void tests_bh_git_merge_origin_ok(void **state) {
  * `bh_git_merge_origin()` does nothing if there are no changes to merge.
  */
 void tests_bh_git_merge_origin_equal(void **state) {
+    skip_if_filtered_out("tests_bh_git_merge_origin_equal");
     skip_if_no_network();
     get_state();
     git_commit *new_commit;
@@ -196,6 +200,7 @@ void tests_bh_git_merge_origin_equal(void **state) {
  * merge conflicts occur.
  */
 void tests_bh_git_merge_origin_conflicts(void **state) {
+    skip_if_filtered_out("tests_bh_git_merge_origin_conflicts");
     skip_if_no_network();
     get_state();
     execute_script(path_join(path, "cause-merge-conflicts.sh"));
@@ -210,8 +215,9 @@ void tests_bh_git_merge_origin_conflicts(void **state) {
  * Create a new file and run the function. A new commit should be created.
  */
 void tests_bh_git_commit_changes_ok(void **state) {
-    execute_script(path_join(path, "touch.sh"));
+    skip_if_filtered_out("tests_bh_git_commit_changes_ok");
     get_state();
+    execute_script(path_join(path, "touch.sh"));
     git_commit *new_commit = NULL;
     assert_ok(bh_git_commit_changes(&new_commit, s->manager, NULL, daemon_git->signature));
     assert_non_null(new_commit);
@@ -223,6 +229,7 @@ void tests_bh_git_commit_changes_ok(void **state) {
  * `bh_git_commit_changes()` does nothing if there are no changes to commit.
  */
 void tests_bh_git_commit_changes_unchanged(void **state) {
+    skip_if_filtered_out("tests_bh_git_commit_changes_unchanged");
     get_state();
     git_commit *new_commit;
     assert_int_equal(bh_git_commit_changes(&new_commit, s->manager, NULL, daemon_git->signature), BH_GITERR_NO_CHANGES);
@@ -234,9 +241,10 @@ void tests_bh_git_commit_changes_unchanged(void **state) {
  * Create a new file and run function. Check to see if pushing occurred.
  */
 void tests_bh_git_push_ok(void **state) {
+    skip_if_filtered_out("tests_bh_git_push_ok");
     skip_if_no_network();
-    execute_script(path_join(path, "commit-new.sh"));
     get_state();
+    execute_script(path_join(path, "commit-new.sh"));
     assert_ok(bh_git_push(s->manager, NULL, false));
     execute_script(path_join(path, "pushed-ok.sh"));
 }
@@ -250,6 +258,7 @@ void tests_bh_git_push_ok(void **state) {
  * that the old manager has already loaded.
  */
 void tests_bh_git_push_bad_origin(void **state) {
+    skip_if_filtered_out("tests_bh_git_push_bad_origin");
     skip_if_no_network();
     get_state();
     execute_script(path_join(path, "set-bad-origin.sh"));
@@ -269,6 +278,7 @@ void tests_bh_git_push_bad_origin(void **state) {
  * that the old manager has already loaded.
  */
 void tests_bh_git_push_bad_remote(void **state) {
+    skip_if_filtered_out("tests_bh_git_push_bad_remote");
     skip_if_no_network();
     get_state();
     execute_script(path_join(path, "set-bad-remote.sh"));
@@ -285,9 +295,10 @@ void tests_bh_git_push_bad_remote(void **state) {
  * Push to origin and check if the origin and remote get out of sync.
  */
 void tests_bh_git_push_dont_remote(void **state) {
+    skip_if_filtered_out("tests_bh_git_push_dont_remote");
     skip_if_no_network();
-    execute_script(path_join(path, "commit-new.sh"));
     get_state();
+    execute_script(path_join(path, "commit-new.sh"));
     assert_ok(bh_git_push(s->manager, NULL, true));
     execute_script(path_join(path, "origin-remote-unsync.sh"));
 }
@@ -297,6 +308,7 @@ void tests_bh_git_push_dont_remote(void **state) {
  * `bh_git_checkout_branch()` checkouts the branch.
  */
 void tests_bh_git_checkout_branch_ok(void **state) {
+    skip_if_filtered_out("tests_bh_git_checkout_branch_ok");
     get_state();
     assert_ok(bh_git_checkout_branch(s->manager, "new"));
     execute_script(path_join(path, "on-new-branch.sh"));
@@ -308,8 +320,9 @@ void tests_bh_git_checkout_branch_ok(void **state) {
  * Create a new file and check if it is dirty.
  */
 void tests_bh_git_is_dirty_true(void **state) {
-    execute_script(path_join(path, "touch.sh"));
+    skip_if_filtered_out("tests_bh_git_is_dirty_true");
     get_state();
+    execute_script(path_join(path, "touch.sh"));
     int dirty = false;
     assert_ok(bh_git_is_dirty(&dirty, s->manager));
     assert_int_equal(dirty, true);
@@ -321,6 +334,7 @@ void tests_bh_git_is_dirty_true(void **state) {
  * Just check now.
  */
 void tests_bh_git_is_dirty_false(void **state) {
+    skip_if_filtered_out("tests_bh_git_is_dirty_false");
     get_state();
     int dirty = -1;
     assert_ok(bh_git_is_dirty(&dirty, s->manager));

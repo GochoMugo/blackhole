@@ -1,6 +1,17 @@
-# blackhole: Configuration
+# blackhole: Setup
 
-> Configuring your Blackhole
+To setup a blackhole directory:
+
+1. `git init` a repository
+1. `mkdir .blackhole`
+1. `touch .blackhole/config.ini`
+1. `git remote add origin <Git-URL using SSH e.g. git@github.com:YourUsername/blackhole>`
+1. [optional] `git remote add redudant-backup <Git-URL using SSH>`
+
+**Note**: blackhole expects to find the origin for pulling changes.
+
+
+# blackhole: Configuration
 
 *Blackhole* is configured using a `config.ini` file in the configuration
 directory.

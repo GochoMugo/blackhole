@@ -1,13 +1,10 @@
 # blackhole: Introduction
 
-> Introduction to Blackhole
-
 **Table of Contents**
 
 * [terminology](#terms)
 * [dependencies](#deps)
 * [build](#build)
-* [setup](#setup)
 
 
 <a name="terms"></a>
@@ -15,6 +12,8 @@
 
 * **blackhole directory**: a git repository, configured for use by
   blackhole, containing a `.blackhole` directory
+* **configuration directory:** the actual `.blackhole` directory,
+  usually located alongside a `.git` directory.
 * **origin**: the main remote repository, named as **origin**
   (in `git remote -v`)
 * **remotes**: all remote repositories available to blackhole, excluding
@@ -30,42 +29,55 @@ The dependencies used in the project:
 * [iniparser v4.0][iniparser]
 * [clib][clib] (for installing other deps)
 
-[iniparser]:https://github.com/ndevilla/iniparser/releases/tag/v4.0
-[libgit2]:https://github.com/libgit2/libgit2/releases/tag/v0.24.1
-[clib]:https://github.com/clib/clib
-
 
 <a name="build"></a>
 ## build and install:
 
-We are using [CMake][cmake] to build the project:
+We are using [CMake][cmake] to build the project
+and [clib][clib] to manage some dependencies.
+Prepare to build:
 
-1. Ensure you have installed the dependencies [above](#deps) and that they
-   are discovarable to `cmake`.
-   * **Note**: `make pc`: places the pkg-config config files in `misc/` i.e.
-   `misc/*.pc` in `/usr/local/lib/pkgconfig/`.
-1. `clib install`
-1. `mkdir build`
-1. `cmake ..`
-1. `make install`
+```bash
+# Deps.
+# TODO: Broken. It should install deps as listed in `clib.json`.
+clib install
 
-On a successful build, the executable will be placed at `${PREFIX}/bin/bh`.
-`${PREFIX}` defaults to `/usr/local`.
+# Create build directory.
+mkdir build && cd build
 
-Run `bh --help` to ensure it is working fine.
+# Create cmake environment.
+cmake ..
+```
 
+You can now run `make` commands during development:
+
+```bash
+# Install the `bh` binary at `${PREFIX}/bin/bh`.
+make install
+
+# Build.
+make bh               # Build the main binary.
+make blackhole        # Build the library.
+
+# Run tests.
+make run-tests
+
+# Dependency-related tasks.
+make build-iniparser  # iniparser
+make build-libgit2    # libgit2
+
+# Test-related tasks.
+make gen-test-headers # Generate test headers.
+make bh-tests         # Build the test binary.
+make setup-tests      # Setup test data.
+make clean-tests      # Clean up junk files from tests.
+```
+
+* `${PREFIX}` defaults to `/usr/local`
+* `${TEST_FILTER}`: Set to filter specific tests.
+* `${TEST_NO_NETWORK}`: Set to skip tests using network.
+
+[clib]:https://github.com/clib/clib
 [cmake]:https://cmake.org/
-
-
-<a name="setup"></a>
-## setup:
-
-To setup a blackhole directory:
-
-1. `git init` a repository
-1. `mkdir .blackhole`
-1. `touch .blackhole/config.ini`
-1. `git remote add origin <Git-URL using SSH e.g. git@github.com:YourUsername/blackhole>`
-1. [optional] `git remote add redudant-backup <Git-URL using SSH>`
-
-**Note**: blackhole expects to find the origin for pulling changes.
+[iniparser]:https://github.com/ndevilla/iniparser/releases/tag/v4.0
+[libgit2]:https://github.com/libgit2/libgit2/releases/tag/v0.24.1

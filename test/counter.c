@@ -29,6 +29,7 @@ int tests_bh_counter_teardown_each(void **state) {
  * 'zero.counter' contains '0' while 'one.counter' contains '1'.
  */
 void tests_bh_counter_get_reads(void **state) {
+    skip_if_filtered_out("tests_bh_counter_get_reads");
     int zero, one;
 
     assert_ok(bh_counter_get(&zero, path_counters, "zero.counter"));
@@ -44,6 +45,7 @@ void tests_bh_counter_get_reads(void **state) {
  * There is no counter file named '404.counter'
  */
 void tests_bh_counter_get_missing(void **state) {
+    skip_if_filtered_out("tests_bh_counter_get_missing");
     int count;
     assert_ok(bh_counter_get(&count, path_counters, "404.counter"));
     assert_int_equal(count, 0);
@@ -55,6 +57,7 @@ void tests_bh_counter_get_missing(void **state) {
  * length. 'blank.counter' is a zero-length counter file.
  */
 void tests_bh_counter_get_blank(void **state) {
+    skip_if_filtered_out("tests_bh_counter_get_blank");
     int count;
     assert_ok(bh_counter_get(&count, path_counters, "blank.counter"));
     assert_int_equal(count, 0);
@@ -66,6 +69,7 @@ void tests_bh_counter_get_blank(void **state) {
  * not be read. 'nan.counter' contains a character that is not a number.
  */
 void tests_bh_counter_get_nan(void **state) {
+    skip_if_filtered_out("tests_bh_counter_get_nan");
     int count = -2;
     int ret_code = bh_counter_get(&count, path_counters, "nan.counter");
     assert_int_equal(ret_code, BH_COUNTERERR_FREAD);
@@ -78,6 +82,7 @@ void tests_bh_counter_get_nan(void **state) {
  * binary.
  */
 void tests_bh_counter_get_binary(void **state) {
+    skip_if_filtered_out("tests_bh_counter_get_binary");
     int count = -2;
     int ret_code = bh_counter_get(&count, path_counters, "binary.counter");
     assert_int_equal(ret_code, BH_COUNTERERR_FREAD);
@@ -91,6 +96,7 @@ void tests_bh_counter_get_binary(void **state) {
  * deny us access to read it.
  */
 void tests_bh_counter_get_read_perm(void **state) {
+    skip_if_filtered_out("tests_bh_counter_get_read_perm");
     int count = -2;
     int ret_code = bh_counter_get(&count, path_counters, "unreadable.tmp.counter");
     assert_int_equal(ret_code, BH_COUNTERERR_FOPEN);
@@ -104,6 +110,7 @@ void tests_bh_counter_get_read_perm(void **state) {
  * if existent, in setup.sh.
  */
 void tests_bh_counter_increment_new(void **state) {
+    skip_if_filtered_out("tests_bh_counter_increment_new");
     char *counter = "missing.tmp.counter";
     int count = -1;
     assert_ok(bh_counter_increment(&count, path_counters, counter));
@@ -120,6 +127,7 @@ void tests_bh_counter_increment_new(void **state) {
  * and watch the counter increment.
  */
 void tests_bh_counter_increment_continue(void **state) {
+    skip_if_filtered_out("tests_bh_counter_increment_continue");
     char *counter = "continue.tmp.counter";
     int count = -1;
     int i = 1;
@@ -138,6 +146,7 @@ void tests_bh_counter_increment_continue(void **state) {
  * returns '0'.
  */
 void tests_bh_counter_reset_reset(void **state) {
+    skip_if_filtered_out("tests_bh_counter_reset_reset");
     char *counter = "reset.tmp.counter";
     int count = -1;
     assert_ok(bh_counter_increment(&count, path_counters, counter));
@@ -154,6 +163,7 @@ void tests_bh_counter_reset_reset(void **state) {
  * Use counter file '404.counter'. It is not existent on disk.
  */
 void tests_bh_counter_reset_missing(void **state) {
+    skip_if_filtered_out("tests_bh_counter_reset_missing");
     char *counter = "404.counter";
     assert_ok(bh_counter_reset(path_counters, counter));
 }
@@ -164,6 +174,7 @@ void tests_bh_counter_reset_missing(void **state) {
  * the intervals. Use a pre-computed scenario for this.
  */
 void tests_bh_counter_tick_tick(void **state) {
+    skip_if_filtered_out("tests_bh_counter_tick_tick");
     char *counter = "tick.tmp.counter";
     int tick = -1;
     int output[] = {-1, true, false, true, false};

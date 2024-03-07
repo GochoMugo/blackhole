@@ -27,8 +27,8 @@ expected_name="test"
 
 
 # ${3} is the path to the repository. It must be the parent directory.
-actual_path="$(readlink -f "${3}")"
-expected_path="$(readlink -f "`dirname ${0}`/../..")"
+actual_path="$(greadlink -f "${3}")"
+expected_path="$(greadlink -f "`dirname ${0}`/../..")"
 [[ "${actual_path}" == "${expected_path}" ]] || {
     echo "wrong path to hook:"
     echo "  expected: ${expected_path}"

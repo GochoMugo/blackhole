@@ -35,6 +35,7 @@ int tests_bh_status_teardown_each(void **state) {
  * Compare the actual and expected output.
  */
 void tests_bh_status_print_ok(void **state) {
+    skip_if_filtered_out("tests_bh_status_print_ok");
     char *cmd = path_join(path, "run.out");
     char *path_output = path_join(path, "output.txt");
     assert_output_equal(cmd, path_output, 0);

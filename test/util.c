@@ -5,7 +5,7 @@
 void assert_output_equal(const char *executable, const char *output_filepath, int mode) {
     FILE *file_actual = popen(executable, "r");
     FILE *file_expected = fopen(output_filepath, "r");
-    char *line_actual, *line_expected;
+    char *line_actual = NULL, *line_expected = NULL;
     size_t size_actual = 0, size_expected = 0;
     size_t read_actual, read_expected;
 

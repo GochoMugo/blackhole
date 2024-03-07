@@ -28,7 +28,7 @@ do
     git rev-parse HEAD > /dev/null 2>&1 && { popd > /dev/null; continue; }
     touch .gitkeep
     git add .gitkeep
-    git commit -m "root commit (for testing)" > /dev/null
+    git commit -m "root commit (for testing)" --no-verify > /dev/null
     popd > /dev/null
 done
 
@@ -46,6 +46,5 @@ exes=(
 for exe in ${exes[@]}
 do
     [[ -e "${exe}.out" ]] && [[ "${exe}.out" -nt "${exe}.c" ]] && continue
-    echo ${BIN_DIR}
-    gcc -o "${exe}.out" "${exe}.c" -L"${BIN_DIR}" -lblackhole `pkg-config --libs libgit2 libiniparser`
+    gcc -o "${exe}.out" util.c "${exe}.c" -L"${BIN_DIR}" $INCLUDE_DIRS $LINK_DIRS $LIBS
 done

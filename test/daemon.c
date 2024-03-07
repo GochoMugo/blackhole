@@ -27,6 +27,7 @@ int tests_bh_daemon_teardown_each(void **state) {
  * `bh_daemon_new()` creates a new `bh_config` on the `config` property.
  */
 void tests_bh_daemon_new_config(void **state) {
+    skip_if_filtered_out("tests_bh_daemon_new_config");
     assert_non_null(d->config);
     assert_string_equal(d->config->name, "test");
 }
@@ -36,6 +37,7 @@ void tests_bh_daemon_new_config(void **state) {
  * `bh_daemon_new()` creates a `bh_git_manager` on the `manager` property.
  */
 void tests_bh_daemon_new_manager(void **state) {
+    skip_if_filtered_out("tests_bh_daemon_new_manager");
     assert_non_null(d->manager);
 }
 
@@ -44,6 +46,7 @@ void tests_bh_daemon_new_manager(void **state) {
  * `bh_daemon_new()` resolves paths.
  */
 void tests_bh_daemon_new_paths(void **state) {
+    skip_if_filtered_out("tests_bh_daemon_new_paths");
     assert_non_null(strstr(d->paths.counters, path));
     assert_non_null(strstr(d->paths.counters, "counters"));
     assert_non_null(strstr(d->paths.hooks, path));
@@ -56,6 +59,7 @@ void tests_bh_daemon_new_paths(void **state) {
  * property.
  */
 void tests_bh_daemon_new_signature(void **state) {
+    skip_if_filtered_out("tests_bh_daemon_new_signature");
     assert_non_null(d->signature);
     assert_string_equal(d->signature->name, "test");
     assert_string_equal(d->signature->email, "test@example.com");
@@ -66,6 +70,7 @@ void tests_bh_daemon_new_signature(void **state) {
  * `bh_daemon_free()` frees the daemon.
  */
 void tests_bh_daemon_free_frees(void **state) {
+    skip_if_filtered_out("tests_bh_daemon_free_frees");
     bh_daemon_free(&d);
     assert_null(d);
 }

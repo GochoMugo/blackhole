@@ -29,6 +29,7 @@ int tests_bh_print_teardown_each(void **state) {
  * contains the expected output of executing the executable 'run.out'.
  */
 void tests_bh_print_ok(void **state) {
+    skip_if_filtered_out("tests_bh_print_ok");
     /* we need to redirect stderr to stdout for popen to catch it */
     char *cmd = path_join(path, "run.out 2>&1");
     char *path_output = path_join(path, "output.txt");

@@ -9,10 +9,11 @@
     "control"
   ],
   "license": "MIT",
-  "repo": "forfuturellc/blackhole",
+  "repo": "gochomugo/blackhole",
   "dependencies": {
-    "clibs/flag": "0.0.1",
+    "clibs/flag": "0.1.0",
     "stephenmathieson/mkdirp.c": "0.1.5",
-    "Constellation/console-colors.c": "1.0.3"
+    "Constellation/console-colors.c": "1.0.3",
+    "GochoMugo/contra": "0.0.2"
   }
 }

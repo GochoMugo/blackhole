@@ -1,0 +1,6 @@
+[submodule "deps/iniparser"]
+	path = deps/iniparser
+	url = git@github.com:ndevilla/iniparser.git
+[submodule "deps/libgit2"]
+	path = deps/libgit2
+	url = git@github.com:libgit2/libgit2.git

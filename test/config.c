@@ -28,15 +28,17 @@ int tests_bh_config_teardown_each(void **state) {
  * onto the 'dict' property.
  */
 void tests_bh_config_new_dict(void **state) {
+    skip_if_filtered_out("tests_bh_config_new_dict");
     assert_non_null(config->dict);
 }
 
 
 /**
  * `bh_config_new()` creates a new configuration object with 'path'
- * property to the blackhole root directory, i.e. `BH_PATH_ROOTDIR`.
+ * property to the blackhole root directory.
  */
 void tests_bh_config_new_path(void **state) {
+    skip_if_filtered_out("tests_bh_config_new_path");
     assert_string_equal(config->path, path);
 }
 
@@ -47,6 +49,7 @@ void tests_bh_config_new_path(void **state) {
  * purposes.
  */
 void tests_bh_config_new_daemon_name(void **state) {
+    skip_if_filtered_out("tests_bh_config_new_daemon_name");
     assert_string_equal(config->name, "test");
 }
 
@@ -56,6 +59,7 @@ void tests_bh_config_new_daemon_name(void **state) {
  * file. This is set to `test@example.com` in config file during testing.
  */
 void tests_bh_config_new_daemon_email(void **state) {
+    skip_if_filtered_out("tests_bh_config_new_daemon_email");
     assert_string_equal(config->email, "test@example.com");
 }
 
@@ -65,6 +69,7 @@ void tests_bh_config_new_daemon_email(void **state) {
  * This is set to 'runstate' in config file during testing.
  */
 void tests_bh_config_new_runstate_path(void **state) {
+    skip_if_filtered_out("tests_bh_config_new_runstate_path");
     assert_non_null(strstr(config->runstate_path, "runstate"));
 }
 
@@ -74,6 +79,7 @@ void tests_bh_config_new_runstate_path(void **state) {
  * not found.
  */
 void tests_bh_config_new_missing_configfile(void **state) {
+    skip_if_filtered_out("tests_bh_config_new_missing_configfile");
     int error_code = 0;
 
     bh_config *config_missing = NULL;
@@ -86,6 +92,7 @@ void tests_bh_config_new_missing_configfile(void **state) {
  * `bh_config_free()` NULLifies the `bh_config` object.
  */
 void tests_bh_config_free_null(void **state) {
+    skip_if_filtered_out("tests_bh_config_free_null");
     bh_config_free(&config);
     assert_null(config);
 }

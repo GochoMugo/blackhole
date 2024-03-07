@@ -1,4 +1,5 @@
 #include "../../../src/main.h"
+#include "../../util.h"
 
 int main(void) {
     const char *path = "../bh-status";

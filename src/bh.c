@@ -24,7 +24,6 @@ main(int argc, const char **argv) {
         printf("Blackhole:    %s\n", BH_VERSION);
         printf("LibGit2:      %s\n", LIBGIT2_VERSION);
         printf("Contra:       %s\n", CONTRA_VERSION);
-        printf("LibIniparser: %s\n", LIBINIPARSER_VERSION);
         return_ok(ret_code);
     }
 

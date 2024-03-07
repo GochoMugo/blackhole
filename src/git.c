@@ -92,18 +92,17 @@ bh_git_repository_manager_free(bh_git_repository_manager **manager) {
     git_libgit2_shutdown();
 }
 
+int credentials_cb(git_cred **out, const char *url,
+        const char *username_from_url,
+        unsigned int allowed_types, void *payload) {
+    return git_cred_ssh_key_from_agent(out, username_from_url);
+}
 
 int
 bh_git_fetch_origin(bh_git_repository_manager *manager) {
     int ret_code = 0;
     git_fetch_options options = GIT_FETCH_OPTIONS_INIT;
     const git_error *err = NULL;
-
-    int credentials_cb(git_cred **out, const char *url,
-            const char *username_from_url,
-            unsigned int allowed_types, void *payload) {
-        return git_cred_ssh_key_from_agent(out, username_from_url);
-    }
 
     options.callbacks.credentials = credentials_cb;
 
@@ -112,7 +111,8 @@ bh_git_fetch_origin(bh_git_repository_manager *manager) {
     if (NULL != err) {
         if (NULL != strstr(err->message, "Connection refused") ||
             NULL != strstr(err->message, "Name or service not known") ||
-            NULL != strstr(err->message, "Network is unreachable")) {
+            NULL != strstr(err->message, "Network is unreachable") ||
+            NULL != strstr(err->message, "Failed getting banner")) {
             return_err_now(BH_GITERR_PULL_ORIGIN);
         }
     }
@@ -314,11 +314,6 @@ bh_git_push(bh_git_repository_manager *manager, git_reference *current_ref, int 
         return_err(ret_code);
     }
 
-    int credentials_cb(git_cred **out, const char *url,
-            const char *username_from_url,
-            unsigned int allowed_types, void *payload) {
-        return git_cred_ssh_key_from_agent(out, username_from_url);
-    }
     options.callbacks.credentials = credentials_cb;
 
     /* Init the refspecs */
