@@ -3,7 +3,7 @@
 > Simple, Git-powered Backup, in Your Control
 
 
-## introduction:
+## introduction
 
 **blackhole** is a very simple backup utility, originally meant
 for minimal use cases or low-power/iot applications.
@@ -11,21 +11,20 @@ for minimal use cases or low-power/iot applications.
 **Table of Contents**
 
 * [installation](#installation)
+* [usage][usage]
 * [project principles](#principles)
 * [limitations](#limitations)
-* [hacking](#hacking)
+* [license](#license)
 
 
 <a name="installation"></a>
-### installation:
+### installation
 
-See build and installation instructions [here][build]
-
-[build]:https://github.com/forfuturellc/blackhole/blob/master/docs/introduction.md#build
+See build and installation instructions [here][build].
 
 
 <a name="principles"></a>
-### project principles:
+### project principles
 
 * **minimal**: blackhole just handles creating the snapshots and pushing to
   remote. It does **not** run as a daemon, giving the user the freedom to
@@ -36,20 +35,24 @@ See build and installation instructions [here][build]
 * **still a Git repo**: we believe Git, as a versioning system, does an
   awesome job. You can issue the same Git commands you would, in any other
   Git repo. This allows you to perform rollbacks and use any hosted-Git-repo
-  service as your own backup service. (Thank you, Linus and contributors)
+  service as your own backup service.
 
 
 <a name="limitations"></a>
-### limitations:
+### limitations
 
-* **no beautiful GUI**: it is being built by terminal freaks who care less
-  about this.
+* **no beautiful GUI**: it is built for terminal only (for now).
 * **no support for .gitattributes**: we have not gotten to implement this.
   You are welcome to do so.
 
 
-## license:
+<a name="license"></a>
+## license
 
 ***The MIT License (MIT)***
 
 *Copyright (c) 2016 GochoMugo <mugo@forfuture.co.ke>*
+
+
+[build]:https://github.com/gochomugo/blackhole/blob/master/docs/introduction.md#build
+[usage]:https://github.com/gochomugo/blackhole/blob/master/docs/usage.md

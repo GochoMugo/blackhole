@@ -8,20 +8,20 @@
 
 
 <a name="terms"></a>
-## terminology:
+## terminology
 
 * **blackhole directory**: a git repository, configured for use by
-  blackhole, containing a `.blackhole` directory
+  blackhole, containing both `.blackhole` and `.git` directories.
 * **configuration directory:** the actual `.blackhole` directory,
-  usually located alongside a `.git` directory.
+  usually located next to a `.git` directory.
 * **origin**: the main remote repository, named as **origin**
-  (in `git remote -v`)
+  (in `git remote -v`).
 * **remotes**: all remote repositories available to blackhole, excluding
-  **origin**
+  **origin**.
 
 
 <a name="deps"></a>
-## dependencies:
+## dependencies
 
 The dependencies used in the project:
 
@@ -31,7 +31,7 @@ The dependencies used in the project:
 
 
 <a name="build"></a>
-## build and install:
+## build and install
 
 We are using [CMake][cmake] to build the project
 and [clib][clib] to manage some dependencies.
@@ -77,7 +77,7 @@ make clean-tests      # Clean up junk files from tests.
 * `${TEST_FILTER}`: Set to filter specific tests.
 * `${TEST_NO_NETWORK}`: Set to skip tests using network.
 
-[clib]:https://github.com/clib/clib
+[clib]:https://github.com/clibs/clib
 [cmake]:https://cmake.org/
 [iniparser]:https://github.com/ndevilla/iniparser/releases/tag/v4.0
 [libgit2]:https://github.com/libgit2/libgit2/releases/tag/v0.24.1

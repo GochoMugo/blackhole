@@ -8,12 +8,12 @@ To setup a blackhole directory:
 1. `git remote add origin <Git-URL using SSH e.g. git@github.com:YourUsername/blackhole>`
 1. [optional] `git remote add redudant-backup <Git-URL using SSH>`
 
-**Note**: blackhole expects to find the origin for pulling changes.
+**Note**: blackhole expects to find **origin** for pulling changes.
 
 
 # blackhole: Configuration
 
-*Blackhole* is configured using a `config.ini` file in the configuration
+**blackhole** is configured using a `config.ini` file in the configuration
 directory.
 
 ```ini
@@ -28,13 +28,23 @@ email=john.doe@example.com
 
 [runstate]
 ; Path to an existing directory in which to store state
-; Defaults to the directory this file lies in
+; Defaults to the directory this file lies in.
 path=/home/johndoe/var/run/blackhole/docs/
 
 [intervals]
 ; This section allows configuring the number of errors experienced before
 ; executing hooks. These key-value pairs are in the format:
 ; <event-id>=<integer>
-; where <event-id> can be one of the event IDs (documented elsewhere)
+; where <event-id> can be one of the event IDs (documented below)
 ; and <integer> is the number of times before executing hook (again)
+; For example,
+pull.errors=5
 ```
+
+Available hook events:
+
+* `pull.errors`
+* `merge-conflicts.errors`
+* `push-origin.errors`
+* `push-remote.errors`
+* `fatal.errors`
