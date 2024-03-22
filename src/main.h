@@ -5,6 +5,8 @@
 #ifndef _BH_main_h_
 #define _BH_main_h_ 1
 
+#define contra_error_set_cb bh_error_set
+
 #include <assert.h>
 #include <errno.h>
 #include <stdarg.h>

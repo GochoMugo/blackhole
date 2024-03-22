@@ -41,6 +41,7 @@ main(int argc, const char **argv) {
     }
 
 _on_error
+    bh_print_error(bh_error_get());
 _cleanup
     bh_daemon_free(&daemon);
     return 0 <= ret_code ? EXIT_SUCCESS : EXIT_FAILURE;
