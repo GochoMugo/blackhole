@@ -15,32 +15,32 @@ add_custom_target(build-iniparser
 list(APPEND deps iniparser)
 
 # libgit2
-pkg_check_modules(LIBSSH2 libssh2)
+pkg_check_modules(LIBSSH2 REQUIRED libssh2)
 include_directories(deps/libgit2/include)
 link_directories(deps/libgit2/build ${LIBSSH2_LIBRARY_DIRS})
 add_custom_target(build-libgit2
     COMMAND mkdir -p build
         && cd build
-        && cmake .. -DBUILD_SHARED_LIBS=OFF -DBUILD_CLAR=OFF -DCURL=OFF
+        && cmake .. -DBUILD_SHARED_LIBS=OFF -DBUILD_CLAR=OFF -DCURL=OFF -DUSE_OPENSSL=OFF
         && make
     WORKING_DIRECTORY ${root_dir}/deps/libgit2)
-list(APPEND deps git2 iconv ssh2 z)
+list(APPEND deps git2 ssh2 z)
 
 # macos quirks.
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    list(APPEND deps "-framework Security" "-framework CoreFoundation")
+    list(APPEND deps "iconv -framework Security" "-framework CoreFoundation")
 endif()
 
 # library
 include_directories(deps)
 file(GLOB src_lib src/*.c deps/**/*.c)
-list(FILTER src_lib EXCLUDE REGEX blackhole/src/bh.c)
+list(FILTER src_lib EXCLUDE REGEX src/bh.c)
 add_library(blackhole ${src_lib})
 
 # executable
-set(src_exe ${src_lib} src/bh.c)
+set(src_exe src/bh.c)
 add_executable(bh ${src_exe})
-target_link_libraries(bh ${deps})
+target_link_libraries(bh blackhole ${deps})
 add_dependencies(bh build-iniparser build-libgit2 blackhole)
 
 # test headers
