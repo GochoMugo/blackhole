@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <sys/wait.h>
 #include <git2.h>
 #include <iniparser.h>
 #include <contra/contra.h>

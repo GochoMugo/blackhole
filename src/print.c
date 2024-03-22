@@ -12,6 +12,7 @@ bh_print_marker(const char *message) {
     char now_str[32];
     strftime(now_str, 32, "%FT%T%z", now);
     printf("%s # %s: ", now_str, message);
+    fflush(stdout);
 }
 
 

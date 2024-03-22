@@ -9,6 +9,9 @@ deps/
 # build artefacts
 build/
 
+# release artefacts
+release/
+
 # test artefacts
 test/data/**/*.tmp.counter
 test/data/**/*.out

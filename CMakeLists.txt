@@ -1,10 +1,19 @@
 cmake_minimum_required(VERSION 3.6)
 project(blackhole)
 
-# general configurations
+# modules
 include(FindPkgConfig)
+
+# options
+option(CROSS "cross-compiling" OFF)
+
+# general configurations
 set(CMAKE_C_FLAGS "--std=c99 -Wall -pedantic")
 set(root_dir ${CMAKE_CURRENT_SOURCE_DIR})
+
+if (CROSS)
+    link_directories(/lib/aarch64-linux-gnu)
+endif()
 
 # iniparser
 include_directories(deps/iniparser/src)
@@ -29,6 +38,10 @@ list(APPEND deps git2 ssh2 z)
 # macos quirks.
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     list(APPEND deps "iconv -framework Security" "-framework CoreFoundation")
+endif()
+# cross-compilation quirks.
+if (CROSS)
+    list(APPEND deps crypto)
 endif()
 
 # library
