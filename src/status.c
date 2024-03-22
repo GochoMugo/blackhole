@@ -42,11 +42,11 @@ bh_status_print(bh_daemon *daemon) {
         cc_fprintf(CC_FG_WHITE, stdout, "%s\n", branch_name);
     cc_fprintf(CC_FG_CYAN, stdout, "%20s : ", "dirty");
         cc_fprintf(CC_FG_WHITE, stdout, "%s\n", true == is_dirty ? "yes" : "no");
-    cc_fprintf(CC_FG_CYAN, stdout, "%20s : ", "err.pull");
+    cc_fprintf(CC_FG_CYAN, stdout, "%20s : ", BH_EVENT_PULLERRORS);
         cc_fprintf(CC_FG_WHITE, stdout, "%d\n", pull_errors);
-    cc_fprintf(CC_FG_CYAN, stdout, "%20s : ", "err.pushorig");
+    cc_fprintf(CC_FG_CYAN, stdout, "%20s : ", BH_EVENT_PUSHORIGINERRORS);
         cc_fprintf(CC_FG_WHITE, stdout, "%d\n", push_origin_errors);
-    cc_fprintf(CC_FG_CYAN, stdout, "%20s : ", "err.pushrem");
+    cc_fprintf(CC_FG_CYAN, stdout, "%20s : ", BH_EVENT_PUSHREMOTEERRORS);
         cc_fprintf(CC_FG_WHITE, stdout, "%d\n", push_remote_errors);
     puts("");
 
