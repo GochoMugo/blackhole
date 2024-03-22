@@ -7,6 +7,12 @@ To setup a blackhole directory:
 1. `touch .blackhole/config.ini`
 1. `git remote add origin <Git-URL using SSH e.g. git@github.com:YourUsername/blackhole>`
 1. [optional] `git remote add redudant-backup <Git-URL using SSH>`
+1. [optional] configure cron to run blackhole every 5 minutes.
+   ```bash
+   # Run bh every 5 mins
+   */5 * * * * /bin/bh-cron-wrapper /bin/bh --path /config --sync >> /var/log/bh.log 2>&1
+   ```
+
 
 **Note**: blackhole expects to find **origin** for pulling changes.
 
