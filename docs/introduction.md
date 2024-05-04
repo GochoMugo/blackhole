@@ -39,8 +39,7 @@ Prepare to build:
 
 ```bash
 # Deps.
-# TODO: Broken. It should install deps as listed in `clib.json`.
-clib install
+make deps
 
 # Create build directory.
 mkdir build && cd build

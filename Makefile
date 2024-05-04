@@ -2,6 +2,7 @@ help:
 	@echo
 	@echo "  clean                Clean builds"
 	@echo "  cross                Cross-compile"
+	@echo "  deps                 Install dependencies"
 	@echo "  help                 Show this help info"
 	@echo
 
@@ -11,7 +12,7 @@ clean:
 	rm -rf deps/libgit2/build
 	rm -f cross-compile
 
-cross: clean deps
+cross: clean deps _deps_cross
 	./cross-compile bash -c 'make _cross'
 	rm -rf release && mkdir release
 	cp build/bh release/bh
@@ -29,7 +30,9 @@ deps:
 	git submodule init
 	git submodule update
 	clib install --skip-cache `cat clib.json | jq '.dependencies | to_entries | map([.key,.value] | join("@")) | .[]' -r | tr '\n' ' '`
+
+_deps_cross:
 	docker run --rm dockcross/linux-arm64-full > cross-compile
 	chmod +x cross-compile
 
-.PHONY: clean cross _cross deps help
+.PHONY: clean cross _cross deps _deps_cross help
