@@ -23,7 +23,11 @@
 <a name="deps"></a>
 ## dependencies
 
-The dependencies used in the project:
+Production dependencies required:
+
+* [SSH library][libssh] (`apt install libssh2-1`)
+
+Development dependencies:
 
 * [libgit2 v0.24.1][libgit2] (compiled with libssh2 support)
 * [iniparser v4.0][iniparser]
@@ -80,3 +84,4 @@ make clean-tests      # Clean up junk files from tests.
 [cmake]:https://cmake.org/
 [iniparser]:https://github.com/ndevilla/iniparser/releases/tag/v4.0
 [libgit2]:https://github.com/libgit2/libgit2/releases/tag/v0.24.1
+[libssh]: https://libssh2.org/
