@@ -1,3 +1,5 @@
+SUDO=sudo
+
 help:
 	@echo
 	@echo "  clean                Clean builds"
@@ -27,6 +29,7 @@ _cross:
 	mkdir build && cd build && cmake .. -DCROSS=ON && make
 
 deps:
+	$(SUDO) apt-get install -y libssh2-1-dev
 	git submodule init
 	git submodule update
 	clib install --skip-cache `cat clib.json | jq '.dependencies | to_entries | map([.key,.value] | join("@")) | .[]' -r | tr '\n' ' '`
