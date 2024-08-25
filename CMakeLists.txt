@@ -11,9 +11,12 @@ option(CROSS "cross-compiling" OFF)
 set(CMAKE_C_FLAGS "--std=c99 -Wall -pedantic")
 set(root_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
+include_directories(/usr/local/include)
+link_directories(/usr/local/lib)
 if (CROSS)
     link_directories(/lib/aarch64-linux-gnu)
 endif()
+list(APPEND deps contra curl)
 
 # iniparser
 include_directories(deps/iniparser/src)
@@ -65,8 +68,6 @@ add_custom_target(gen-test-headers
 
 # test binary
 add_executable(bh-tests EXCLUDE_FROM_ALL ${test_src_exe})
-target_include_directories(bh-tests PRIVATE /usr/local/include) # TODO: /usr/local/
-target_link_directories(bh-tests PRIVATE /usr/local/lib) # TODO: /usr/local/
 target_link_libraries(bh-tests ${test_deps})
 add_dependencies(bh-tests blackhole gen-test-headers)
 

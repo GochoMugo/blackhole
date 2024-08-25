@@ -17,7 +17,7 @@
 #include <sys/wait.h>
 #include <git2.h>
 #include <iniparser.h>
-#include <contra/contra.h>
+#include <contra.h>
 
 #include "../deps/flag/flag.h"
 #include "../deps/mkdirp/mkdirp.h"
