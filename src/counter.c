@@ -23,14 +23,13 @@ bh_counter__file(FILE **out,
     char *path = NULL;
     FILE *file = NULL;
 
-    ret_code = contra_path_join(&path, counters_path, event);
-    return_err_ext(ret_code, BH_DAEMONERR_PATHRESLV);
+    return_err_ext(contra_path_join(&path, counters_path, event), BH_DAEMONERR_PATHRESLV);
 
     file = fopen(path, "r+");
     /* if we have successfully opened the file, we return ok */
     if (NULL != file) {
         *out = file;
-        return_ok(ret_code);
+        return_ok(0);
     }
 
     /* if the error is not due to the file being non-existent, we return
@@ -44,8 +43,7 @@ bh_counter__file(FILE **out,
         return_err_now(BH_COUNTERERR_ENOENT);
     }
 
-    ret_code = mkdirp(counters_path, S_IRWXU);
-    return_err(ret_code);
+    return_err_ext(mkdirp(counters_path, S_IRWXU), BH_COUNTERERR_MKDIR);
 
     file = fopen(path, "w+");
     /* if we can not create the file, we return with an error */
@@ -53,17 +51,15 @@ bh_counter__file(FILE **out,
         return_err_now(BH_COUNTERERR_FOPEN);
     }
 
-    ret_code = fprintf(file, "%d", 0);
-    return_err(ret_code);
+    return_err_ext(fprintf(file, "%d", 0), BH_COUNTERERR_FWRITE);
 
-    ret_code = fseek(file, 0, SEEK_SET);
-    return_err_ext(ret_code, BH_COUNTERERR_FREAD);
+    return_err_ext(fseek(file, 0, SEEK_SET), BH_COUNTERERR_FREAD);
 
     *out = file;
 
-_on_error
+on_error:
     if (NULL != file) fclose(file);
-_cleanup
+cleanup:
     if (NULL != path) free(path);
     return ret_code;
 }
@@ -87,19 +83,18 @@ bh_counter__get(int *out, FILE *file) {
         count = 0;
         ret_code = 0;
     }
-    return_err(ret_code);
-
-    ret_code = fseek(file, 0, SEEK_SET);
     return_err_ext(ret_code, BH_COUNTERERR_FREAD);
+
+    return_err_ext(fseek(file, 0, SEEK_SET), BH_COUNTERERR_FREAD);
 
     /* if the count is still -1, we know we have an error
      * in reading the file */
-    if (-1 == count) return_err_now(BH_COUNTERERR_FREAD);
+    if (-1 == count) return_err_now(BH_COUNTERERR_FREAD); // TODO
 
     *out = count;
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     return ret_code;
 }
 
@@ -116,16 +111,15 @@ bh_counter_get(int *out, const char *counters_path, const char *event) {
          * and return ok */
         if (BH_COUNTERERR_ENOENT == ret_code) {
             *out = 0;
-            return_ok(ret_code);
+            return_ok(0);
         }
         return_err(ret_code);
     }
 
-    ret_code = bh_counter__get(out, file);
-    return_err(ret_code);
+    return_err(bh_counter__get(out, file));
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     if (NULL != file) fclose(file);
     return ret_code;
 }
@@ -137,25 +131,20 @@ bh_counter_increment(int *out, const char *counters_path, const char *event) {
     int count = 0;
     FILE *file = NULL;
 
-    ret_code = bh_counter__file(&file, counters_path, event, true);
-    return_err(ret_code);
+    return_err(bh_counter__file(&file, counters_path, event, true));
 
-    ret_code = bh_counter__get(&count, file);
-    return_err(ret_code);
+    return_err(bh_counter__get(&count, file));
 
-    ret_code = ftruncate(fileno(file), 0);
-    return_err(ret_code);
+    return_err_ext(ftruncate(fileno(file), 0), BH_COUNTERERR_TRUNCATE);
 
     count++;
 
-    ret_code = fprintf(file, "%d", count);
-    return_err_ext(ret_code, BH_COUNTERERR_FWRITE);
+    return_err_ext(fprintf(file, "%d", count), BH_COUNTERERR_FWRITE);
 
     *out = count;
-    ret_code = 0;
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     if (NULL != file) fclose(file);
     return ret_code;
 }
@@ -166,16 +155,15 @@ bh_counter_reset(const char *counters_path, const char *event) {
     int ret_code = 0;
     char *path = NULL;
 
-    ret_code = contra_path_join(&path, counters_path, event);
-    return_err_ext(ret_code, BH_DAEMONERR_PATHRESLV);
+    return_err_ext(contra_path_join(&path, counters_path, event), BH_DAEMONERR_PATHRESLV);
 
     ret_code = unlink(path);
     /* if the error is due to the file being non-existent, we ignore it */
     if (ENOENT == errno) ret_code = 0;
     return_err_ext(ret_code, BH_COUNTERERR_UNLINK);
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     if (NULL != path) free(path);
     return ret_code;
 }
@@ -187,12 +175,11 @@ bh_counter_tick(int *tick, const char *path, const char *event,
     int ret_code = 0;
     int count = 0;
 
-    ret_code = bh_counter_increment(&count, path, event);
-    return_err(ret_code);
+    return_err(bh_counter_increment(&count, path, event));
 
     *tick = 0 == ((count-1) % intervals) ? true : false;
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     return ret_code;
 }

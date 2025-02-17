@@ -75,7 +75,7 @@ bh_error_copy(bh_error **out) {
 
     if (NULL == bh_err.message) {
         *out = NULL;
-        return_ok(ret_code);
+        return_ok(0);
     }
 
     e = malloc(sizeof(bh_error));
@@ -86,14 +86,13 @@ bh_error_copy(bh_error **out) {
     e->code = bh_err.code;
     e->message = NULL;
 
-    ret_code = asprintf(&(e->message), "%s", bh_err.message);
-    return_err(ret_code);
+    return_err_ext(asprintf(&(e->message), "%s", bh_err.message), BH_DAEMONERR_NOMEM);
 
     *out = e;
 
-_on_error
+on_error:
     if (NULL != e) bh_error_free(&e);
-_cleanup
+cleanup:
     return ret_code;
 }
 

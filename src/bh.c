@@ -24,25 +24,20 @@ main(int argc, const char **argv) {
         printf("Blackhole:    %s\n", BH_VERSION);
         printf("LibGit2:      %s\n", LIBGIT2_VERSION);
         printf("Contra:       %s\n", CONTRA_VERSION);
-        return_ok(ret_code);
+        return_ok(0);
     }
 
-    ret_code = bh_daemon_new(&daemon, path);
-    return_err(ret_code);
+    return_err(bh_daemon_new(&daemon, path));
 
     if (0 != do_status) {
-        ret_code = bh_status_print(daemon);
-        return_err(ret_code);
+        return_err(bh_status_print(daemon));
+    } else if (0 != do_sync) {
+        return_err(bh_run_sync(daemon));
     }
 
-    if (0 != do_sync) {
-        ret_code = bh_run_sync(daemon);
-        return_err(ret_code);
-    }
-
-_on_error
+on_error:
     bh_print_error(bh_error_get());
-_cleanup
+cleanup:
     bh_daemon_free(&daemon);
     return 0 <= ret_code ? EXIT_SUCCESS : EXIT_FAILURE;
 }

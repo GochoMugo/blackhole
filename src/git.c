@@ -31,17 +31,15 @@ bh_git_repository_manager_new(bh_git_repository_manager **manager,
     mgr->origin = NULL;
     mgr->num_of_remotes = 0;
 
-    ret_code = git_repository_open(&(mgr->repository), config->path);
-    return_err(ret_code);
+    return_err(git_repository_open(&(mgr->repository), config->path));
 
-    ret_code = git_remote_list(&remote_names, mgr->repository);
-    return_err(ret_code);
+    return_err(git_remote_list(&remote_names, mgr->repository));
 
     mgr->num_of_remotes = remote_names.count;
 
     remotes = malloc(sizeof(git_remote *) * mgr->num_of_remotes);
     if (NULL == remotes) {
-        return_err(1);
+        return_err(1); // TODO
     }
 
     mgr->remotes = remotes;
@@ -49,8 +47,7 @@ bh_git_repository_manager_new(bh_git_repository_manager **manager,
     for (i = 0; i < remote_names.count; i++) {
         char *remote_name = remote_names.strings[i];
 
-        ret_code = git_remote_lookup(&(mgr->remotes[i]), mgr->repository, remote_name);
-        return_err(ret_code);
+        return_err(git_remote_lookup(&(mgr->remotes[i]), mgr->repository, remote_name));
 
         if (0 == strcmp(remote_name, "origin")) {
             mgr->origin = mgr->remotes[i];
@@ -59,11 +56,11 @@ bh_git_repository_manager_new(bh_git_repository_manager **manager,
 
     *manager = mgr;
 
-_on_error
+on_error:
     /** free(remotes) - bh_git_repository_manager_free() does it for us */
     if (NULL != mgr) bh_git_repository_manager_free(&mgr);
     *manager = NULL;
-_cleanup
+cleanup:
     /** free(remotes) - bh_git_repository_manager_free() does it for us, once
      * user frees the manager after use */
     git_strarray_free(&remote_names);
@@ -118,8 +115,8 @@ bh_git_fetch_origin(bh_git_repository_manager *manager) {
     }
     return_err(ret_code);
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     return ret_code;
 }
 
@@ -135,30 +132,25 @@ bh_git_merge_origin(git_commit **out, bh_git_repository_manager *manager) {
     git_checkout_options checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
 
     /** Get the OID of the current commit */
-    ret_code = git_reference_name_to_id(&current_commit_id, manager->repository, "HEAD");
-    return_err(ret_code);
+    return_err(git_reference_name_to_id(&current_commit_id, manager->repository, "HEAD"));
 
     /** Get the OID of the new commit */
-    ret_code = git_reference_name_to_id(&new_commit_id, manager->repository, "refs/remotes/origin/master");
-    return_err(ret_code);
+    return_err(git_reference_name_to_id(&new_commit_id, manager->repository, "refs/remotes/origin/master"));
 
     /** Exit early, if the commit OIDs are the same */
     if (git_oid_equal(&current_commit_id, &new_commit_id)) {
         *out = NULL;
-        goto cleanup;
+        return_ok(0);
     }
 
     /* Get the current commit */
-    ret_code = git_commit_lookup(&current_commit, manager->repository, &current_commit_id);
-    return_err(ret_code);
+    return_err(git_commit_lookup(&current_commit, manager->repository, &current_commit_id));
 
     /** Get the new commit */
-    ret_code = git_commit_lookup(&new_commit, manager->repository, &new_commit_id);
-    return_err(ret_code);
+    return_err(git_commit_lookup(&new_commit, manager->repository, &new_commit_id));
 
     /** Merge the two commit, producing a new index */
-    ret_code = git_merge_commits(&new_index, manager->repository, current_commit, new_commit, NULL);
-    return_err(ret_code);
+    return_err(git_merge_commits(&new_index, manager->repository, current_commit, new_commit, NULL));
 
     /** Exit with an error, if we had conflicts */
     if (1 == git_index_has_conflicts(new_index)) {
@@ -166,20 +158,16 @@ bh_git_merge_origin(git_commit **out, bh_git_repository_manager *manager) {
     }
 
     /** Writing the new tree pointed to, by the new index, producing the OID of the new tree */
-    ret_code = git_index_write_tree_to(&new_tree_id, new_index, manager->repository);
-    return_err(ret_code);
+    return_err(git_index_write_tree_to(&new_tree_id, new_index, manager->repository));
 
     /** Read the new tree into memory */
-    ret_code = git_tree_lookup(&new_tree, manager->repository, &new_tree_id);
-    return_err(ret_code);
+    return_err(git_tree_lookup(&new_tree, manager->repository, &new_tree_id));
 
     /** Get the index backed by the repository */
-    ret_code = git_repository_index(&current_index, manager->repository);
-    return_err(ret_code);
+    return_err(git_repository_index(&current_index, manager->repository));
 
     /** Read the new tree into the repository's index */
-    ret_code = git_index_read_tree(current_index, new_tree);
-    return_err(ret_code);
+    return_err(git_index_read_tree(current_index, new_tree));
 
     /** Checkout the index */
     checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
@@ -202,9 +190,9 @@ bh_git_merge_origin(git_commit **out, bh_git_repository_manager *manager) {
     /** Leave the commit to the caller */
     *out = new_commit;
 
-_on_error
+on_error:
     *out = NULL;
-_cleanup
+cleanup:
     if (NULL != current_index) git_index_free(current_index);
     if (NULL != new_index) git_index_free(new_index);
     if (NULL != current_commit) git_commit_free(current_commit);
@@ -233,24 +221,19 @@ bh_git_commit_changes(git_commit **new_commit, bh_git_repository_manager *manage
     }
 
     /** Get the current index */
-    ret_code = git_repository_index(&current_index, manager->repository);
-    return_err(ret_code);
+    return_err(git_repository_index(&current_index, manager->repository));
 
     /** Add all the changes */
-    ret_code = git_index_add_all(current_index, NULL, GIT_INDEX_ADD_DEFAULT, NULL, NULL);
-    return_err(ret_code);
+    return_err(git_index_add_all(current_index, NULL, GIT_INDEX_ADD_DEFAULT, NULL, NULL));
 
     /** Get the tree pointed to by the base commit */
-    ret_code = git_commit_tree(&current_tree, base_commit);
-    return_err(ret_code);
+    return_err(git_commit_tree(&current_tree, base_commit));
 
     /** Check for diffs between the current index and the above tree */
-    ret_code = git_diff_tree_to_index(&diffs, manager->repository, current_tree, NULL, NULL);
-    return_err(ret_code);
+    return_err(git_diff_tree_to_index(&diffs, manager->repository, current_tree, NULL, NULL));
 
     /** Get the diff stats */
-    ret_code = git_diff_get_stats(&diff_stats, diffs);
-    return_err(ret_code);
+    return_err(git_diff_get_stats(&diff_stats, diffs));
 
     /** Exit early, if there are no changes */
     if (0 == git_diff_stats_files_changed(diff_stats)) {
@@ -258,40 +241,32 @@ bh_git_commit_changes(git_commit **new_commit, bh_git_repository_manager *manage
     }
 
     /** Write tree, using the index with changes, to disc */
-    ret_code = git_index_write_tree(&new_tree_id, current_index);
-    return_err(ret_code);
+    return_err(git_index_write_tree(&new_tree_id, current_index));
 
     /** Get the newly-created tree, into memory */
-    ret_code = git_tree_lookup(&new_tree, manager->repository, &new_tree_id);
-    return_err(ret_code);
+    return_err(git_tree_lookup(&new_tree, manager->repository, &new_tree_id));
 
     /** Read the new tree into the repository's index */
-    ret_code = git_index_read_tree(current_index, new_tree);
-    return_err(ret_code);
+    return_err(git_index_read_tree(current_index, new_tree));
 
     /** Get the default signature, to use as the host signature */
-    ret_code = git_signature_default(&host_signature, manager->repository);
-    return_err(ret_code);
+    return_err(git_signature_default(&host_signature, manager->repository));
 
     /** Write the updated index to disc */
-    ret_code = git_index_write(current_index);
-    return_err(ret_code);
+    return_err(git_index_write(current_index));
 
     /** Create a new commit */
-    ret_code = git_commit_create_v(&new_commit_id, manager->repository, "HEAD", host_signature, daemon_signature, NULL, "backup", new_tree, 1, current_commit);
-    return_err(ret_code);
+    return_err(git_commit_create_v(&new_commit_id, manager->repository, "HEAD", host_signature, daemon_signature, NULL, "backup", new_tree, 1, current_commit));
 
     /** Update the master ref */
-    ret_code = bh_git__update_master_ref(manager, &new_commit_id, "commit-changes");
-    return_err(ret_code);
+    return_err(bh_git__update_master_ref(manager, &new_commit_id, "commit-changes"));
 
     /** Return the new commit */
-    ret_code = git_commit_lookup(new_commit, manager->repository, &new_commit_id);
-    return_err(ret_code);
+    return_err(git_commit_lookup(new_commit, manager->repository, &new_commit_id));
 
-_on_error
+on_error:
     *new_commit = NULL;
-_cleanup
+cleanup:
     if (NULL != current_commit) git_commit_free(current_commit);
     if (NULL != current_tree) git_tree_free(current_tree);
     if (NULL != current_index) git_index_free(current_index);
@@ -310,8 +285,7 @@ bh_git_push(bh_git_repository_manager *manager, git_reference *current_ref, int 
     git_push_options options = GIT_PUSH_OPTIONS_INIT;
 
     if (NULL == current_ref) {
-        ret_code = git_repository_head(&current_ref, manager->repository);
-        return_err(ret_code);
+        return_err(git_repository_head(&current_ref, manager->repository));
     }
 
     options.callbacks.credentials = credentials_cb;
@@ -323,26 +297,23 @@ bh_git_push(bh_git_repository_manager *manager, git_reference *current_ref, int 
     }
 
     /** Add the refspecs */
-    ret_code = asprintf(&refspecs.strings[0], "%s", git_reference_name(current_ref));
-    return_err(ret_code);
+    return_err(asprintf(&refspecs.strings[0], "%s", git_reference_name(current_ref)));
     refspecs.count = 1;
 
     /** First, push to 'origin', as it's the main branch */
-    ret_code = git_remote_push(manager->origin, &refspecs, &options);
-    return_err_ext(ret_code, BH_GITERR_PUSH_ORIGIN);
+    return_err_ext(git_remote_push(manager->origin, &refspecs, &options), BH_GITERR_PUSH_ORIGIN);
 
     if (false == origin_only) {
         for (index = 0; index < manager->num_of_remotes; index++) {
             /* Do not push to 'origin' again */
             if (manager->remotes[index] == manager->origin) continue;
 
-            ret_code = git_remote_push(manager->remotes[index], &refspecs, &options);
-            return_err_ext(ret_code, BH_GITERR_PUSH_REMOTE);
+            return_err_ext(git_remote_push(manager->remotes[index], &refspecs, &options), BH_GITERR_PUSH_REMOTE);
         }
     }
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     if (0 != refspecs.count) git_strarray_free(&refspecs);
     return ret_code;
 }
@@ -356,26 +327,22 @@ bh_git_checkout_branch(bh_git_repository_manager *manager, const char *branch_na
     char *ref_name = NULL;
 
     /** Get the current commit */
-    ret_code = bh_git__current_commit_lookup(&current_commit, manager);
-    return_err(ret_code);
+    return_err(bh_git__current_commit_lookup(&current_commit, manager));
 
     /** Create the local machine branch */
-    ret_code = git_branch_create(&machine_branch_ref, manager->repository, branch_name, current_commit, true);
-    return_err(ret_code);
+    return_err(git_branch_create(&machine_branch_ref, manager->repository, branch_name, current_commit, true));
 
     /** Resolve the reference name */
-    ret_code = asprintf(&ref_name, "refs/heads/%s", branch_name);
-    return_err(ret_code);
+    return_err(asprintf(&ref_name, "refs/heads/%s", branch_name));
 
     /** Update HEAD to point to the new branch */
-    ret_code = git_repository_set_head(manager->repository, ref_name);
-    return_err(ret_code);
+    return_err(git_repository_set_head(manager->repository, ref_name));
 
     /** Checkout the branch */
     /** Set upstream */
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     if (NULL != current_commit) git_commit_free(current_commit);
     if (NULL != machine_branch_ref) git_reference_free(machine_branch_ref);
     if (NULL != ref_name) free(ref_name);
@@ -394,12 +361,10 @@ bh_git_is_dirty(int *out, bh_git_repository_manager *manager) {
     diff_options.flags |= GIT_DIFF_INCLUDE_UNTRACKED;
 
     /** Diff between HEAD and workdir */
-    ret_code = git_diff_index_to_workdir(&diff, manager->repository, NULL, &diff_options);
-    return_err(ret_code);
+    return_err(git_diff_index_to_workdir(&diff, manager->repository, NULL, &diff_options));
 
     /** Get the diff stats */
-    ret_code = git_diff_get_stats(&diff_stats, diff);
-    return_err(ret_code);
+    return_err(git_diff_get_stats(&diff_stats, diff));
 
     /** If there are no changes */
     if (0 < git_diff_stats_files_changed(diff_stats)) {
@@ -408,8 +373,8 @@ bh_git_is_dirty(int *out, bh_git_repository_manager *manager) {
 
     *out = is_dirty;
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     if (NULL != diff_stats) git_diff_stats_free(diff_stats);
     if (NULL != diff) git_diff_free(diff);
     return ret_code;
@@ -421,14 +386,12 @@ bh_git__current_commit_lookup(git_commit **current_commit, bh_git_repository_man
     int ret_code = 0;
     git_oid current_commit_id;
 
-    ret_code = git_reference_name_to_id(&current_commit_id, manager->repository, "HEAD");
-    return_err(ret_code);
+    return_err(git_reference_name_to_id(&current_commit_id, manager->repository, "HEAD"));
 
-    ret_code = git_commit_lookup(current_commit, manager->repository, &current_commit_id);
-    return_err(ret_code);
+    return_err(git_commit_lookup(current_commit, manager->repository, &current_commit_id));
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     return ret_code;
 }
 
@@ -441,19 +404,16 @@ bh_git__update_ref(bh_git_repository_manager *manager, const char *ref_name, git
     git_reference *new_master_ref = NULL;
 
     /** Get the reference to the 'master' branch */
-    ret_code = git_reference_lookup(&current_master_ref, manager->repository, ref_name);
-    return_err(ret_code);
+    return_err(git_reference_lookup(&current_master_ref, manager->repository, ref_name));
 
     /** Resolve the reference. It might be symbolic */
-    ret_code = git_reference_resolve(&real_master_ref, current_master_ref);
-    return_err(ret_code);
+    return_err(git_reference_resolve(&real_master_ref, current_master_ref));
 
     /** Update this reference to point to the commit */
-    ret_code = git_reference_set_target(&new_master_ref, real_master_ref, commit_id, reflog);
-    return_err(ret_code);
+    return_err(git_reference_set_target(&new_master_ref, real_master_ref, commit_id, reflog));
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     if (NULL != current_master_ref) git_reference_free(current_master_ref);
     if (NULL != real_master_ref) git_reference_free(real_master_ref);
     if (NULL != new_master_ref) git_reference_free(new_master_ref);

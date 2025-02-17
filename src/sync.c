@@ -66,7 +66,7 @@ bh_run_sync(bh_daemon *daemon) {
     ret_code = bh_git_commit_changes(&new_commit_after_commit, daemon->manager, new_commit_after_merge, daemon->signature);
     if (ret_code == BH_GITERR_NO_CHANGES) {
         puts("no changes");
-        return_ok(ret_code);
+        return_ok(0);
     }
     otherwise(NULL);
 
@@ -77,8 +77,8 @@ bh_run_sync(bh_daemon *daemon) {
     raise_event(BH_EVENT_PUSHREMOTEERRORS, BH_GITERR_PUSH_REMOTE);
     otherwise(BH_EVENT_PUSHORIGINERRORS, BH_EVENT_PUSHREMOTEERRORS);
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     bh_print_end();
     if (NULL != new_commit_after_merge) git_commit_free(new_commit_after_merge);
     if (NULL != new_commit_after_commit) git_commit_free(new_commit_after_commit);
@@ -102,18 +102,16 @@ bh_sync__handle_error(const bh_daemon *daemon, const char *event) {
     int ret_code = 0;
     bh_error *error = NULL;
 
-    ret_code = bh_error_copy(&error);
-    return_err(ret_code);
+    return_err(bh_error_copy(&error));
 
     assert(error);
 
     bh_print_error(error);
 
-    ret_code = bh_sync__hook_exec(daemon, error, event);
-    return_err(ret_code);
+    return_err(bh_sync__hook_exec(daemon, error, event));
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     if (NULL != error) bh_error_free(&error);
     return ret_code;
 }
@@ -135,23 +133,20 @@ int bh_sync__hook_exec(const bh_daemon *daemon, const bh_error *error, const cha
     int intervals = 10;
     char *interval_key = NULL;
 
-    ret_code = asprintf(&interval_key, "intervals:%s", event);
-    return_err(ret_code);
+    return_err(asprintf(&interval_key, "intervals:%s", event));
 
     intervals = iniparser_getint(daemon->config->dict, interval_key, intervals);
 
-    ret_code = bh_counter_tick(&run, daemon->paths.counters, event, intervals);
-    return_err(ret_code);
+    return_err(bh_counter_tick(&run, daemon->paths.counters, event, intervals));
 
     if (true == run) {
-        ret_code = bh_hook_exec(daemon, event, error->message);
-        return_err(ret_code);
+        return_err(bh_hook_exec(daemon, event, error->message));
     }
 
     ret_code = run;
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     if (NULL != interval_key) free(interval_key);
     return ret_code;
 }

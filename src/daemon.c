@@ -19,30 +19,25 @@ bh_daemon_new(bh_daemon **daemon, const char *path) {
     d->manager = NULL;
     d->signature = NULL;
 
-    ret_code = bh_config_new(&(d->config), path);
-    return_err(ret_code);
+    return_err(bh_config_new(&(d->config), path));
 
     /* Resolve internal path to 'counters' directory */
-    ret_code = contra_path_join(&(d->paths.counters), d->config->runstate_path, "counters");
-    if (NULL == d->paths.counters) return_err_now(BH_DAEMONERR_PATHRESLV);
+    return_err_ext(contra_path_join(&(d->paths.counters), d->config->runstate_path, "counters"), BH_DAEMONERR_PATHRESLV);
 
     /* Resolve internal path to 'counters' */
-    ret_code = contra_path_join(&(d->paths.hooks), d->config->runstate_path, "hooks");
-    if (NULL == d->paths.hooks) return_err_now(BH_DAEMONERR_PATHRESLV);
+    return_err_ext(contra_path_join(&(d->paths.hooks), d->config->runstate_path, "hooks"), BH_DAEMONERR_PATHRESLV);
 
     /* Create a new repository manager */
-    ret_code = bh_git_repository_manager_new(&(d->manager), d->config);
-    return_err(ret_code);
+    return_err(bh_git_repository_manager_new(&(d->manager), d->config));
 
     /* Create the daemon signature */
-    ret_code = git_signature_now(&(d->signature), d->config->name, d->config->email);
-    return_err(ret_code);
+    return_err_ext(git_signature_now(&(d->signature), d->config->name, d->config->email), BH_DAEMONERR_SIGNATURE);
 
     *daemon = d;
 
-_on_error
+on_error:
     if (NULL != d) bh_daemon_free(&d);
-_cleanup
+cleanup:
     return ret_code;
 }
 

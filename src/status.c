@@ -15,23 +15,17 @@ bh_status_print(bh_daemon *daemon) {
     int is_dirty = false;
     git_reference *current_ref = NULL;
 
-    ret_code = git_repository_head(&current_ref, daemon->manager->repository);
-    return_err(ret_code);
+    return_err(git_repository_head(&current_ref, daemon->manager->repository));
 
-    ret_code = git_branch_name(&branch_name, current_ref);
-    return_err(ret_code);
+    return_err(git_branch_name(&branch_name, current_ref));
 
-    ret_code = bh_counter_get(&pull_errors, daemon->paths.counters, BH_EVENT_PULLERRORS);
-    return_err(ret_code);
+    return_err(bh_counter_get(&pull_errors, daemon->paths.counters, BH_EVENT_PULLERRORS));
 
-    ret_code = bh_counter_get(&push_origin_errors, daemon->paths.counters, BH_EVENT_PUSHORIGINERRORS);
-    return_err(ret_code);
+    return_err(bh_counter_get(&push_origin_errors, daemon->paths.counters, BH_EVENT_PUSHORIGINERRORS));
 
-    ret_code = bh_counter_get(&push_remote_errors, daemon->paths.counters, BH_EVENT_PUSHREMOTEERRORS);
-    return_err(ret_code);
+    return_err(bh_counter_get(&push_remote_errors, daemon->paths.counters, BH_EVENT_PUSHREMOTEERRORS));
 
-    ret_code = bh_git_is_dirty(&is_dirty, daemon->manager);
-    return_err(ret_code);
+    return_err(bh_git_is_dirty(&is_dirty, daemon->manager));
 
     puts("");
     cc_fprintf(CC_FG_CYAN, stdout, "%20s : ", "name");
@@ -50,8 +44,8 @@ bh_status_print(bh_daemon *daemon) {
         cc_fprintf(CC_FG_WHITE, stdout, "%d\n", push_remote_errors);
     puts("");
 
-_on_error
-_cleanup
+on_error:
+cleanup:
     if (NULL != current_ref) git_reference_free(current_ref);
     /** if (NULL != branch_name) free(branch_name); - git_reference_free()
      * above does it for us */

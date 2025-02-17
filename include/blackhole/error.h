@@ -32,8 +32,9 @@ typedef enum {
     BH_CONFIGERR_END,
 
     BH_DAEMONERR,                           /** Generic daemon error */
-    BH_DAEMONERR_NOMEM,                     /** Allocating memory failed, in daemon module  */
+    BH_DAEMONERR_NOMEM,                     /** Allocating memory failed, in daemon module */
     BH_DAEMONERR_PATHRESLV,                 /** Failed to resolve internal path */
+    BH_DAEMONERR_SIGNATURE,                 /** Failed to create git signature for daemon */
     BH_DAEMONERR_END,
 
     BH_HOOKERR,                             /** Generic hook error */
@@ -43,11 +44,13 @@ typedef enum {
     BH_HOOKERR_END,
 
     BH_COUNTERERR,                          /** Generic counter error */
+    BH_COUNTERERR_ENOENT,                   /** File backing the counter is missing */
     BH_COUNTERERR_FOPEN,                    /** Failed to open counter file */
     BH_COUNTERERR_FREAD,                    /** Could not read counter file */
     BH_COUNTERERR_FWRITE,                   /** Could not write to counter file */
+    BH_COUNTERERR_MKDIR,                    /** Could not create directory for counter file. */
+    BH_COUNTERERR_TRUNCATE,                 /** Could not truncate counter file */
     BH_COUNTERERR_UNLINK,                   /** Could not unlink counter file */
-    BH_COUNTERERR_ENOENT,                   /** File backing the counter is missing */
     BH_COUNTERR_END,
 
     BH_ERR_END,
