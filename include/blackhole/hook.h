@@ -13,10 +13,7 @@
  * @param message Message to pass to hook
  * @return 0 or error code
  */
-int
-bh_hook_exec(const bh_daemon *daemon,
-        const char *event,
-        const char *message);
-
+int bh_hook_exec(const bh_daemon *daemon, const char *event,
+                 const char *message);
 
 #endif

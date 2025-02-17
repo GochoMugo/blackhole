@@ -1,27 +1,21 @@
 #include "main.h"
 
-
 static const char *path = NULL;
 
-
 int tests_bh_print_setup_each(void **state) {
-    char *test_dir = NULL;
+  char *test_dir = NULL;
 
-    if (NULL == path) {
-        test_dir = getenv("TEST_DIR");
-        path = path_join(test_dir, "data/bh-print");
-    }
+  if (NULL == path) {
+    test_dir = getenv("TEST_DIR");
+    path = path_join(test_dir, "data/bh-print");
+  }
 
-    assert_non_null(path);
-    tests_common_reset();
-    return 0;
+  assert_non_null(path);
+  tests_common_reset();
+  return 0;
 }
 
-
-int tests_bh_print_teardown_each(void **state) {
-    return 0;
-}
-
+int tests_bh_print_teardown_each(void **state) { return 0; }
 
 /**
  * `bh_print_marker()`, `bh_print_ok()` and `bh_print_status()`
@@ -29,9 +23,9 @@ int tests_bh_print_teardown_each(void **state) {
  * contains the expected output of executing the executable 'run.out'.
  */
 void tests_bh_print_ok(void **state) {
-    skip_if_filtered_out("tests_bh_print_ok");
-    /* we need to redirect stderr to stdout for popen to catch it */
-    char *cmd = path_join(path, "run.out 2>&1");
-    char *path_output = path_join(path, "output.txt");
-    assert_output_equal(cmd, path_output, 1);
+  skip_if_filtered_out("tests_bh_print_ok");
+  /* we need to redirect stderr to stdout for popen to catch it */
+  char *cmd = path_join(path, "run.out 2>&1");
+  char *path_output = path_join(path, "output.txt");
+  assert_output_equal(cmd, path_output, 1);
 }

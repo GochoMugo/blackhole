@@ -1,7 +1,6 @@
 #ifndef _BH_tests_util_h_
 #define _BH_tests_util_h_ 1
 
-
 /**
  * Assert that the 'executable' produces the same output as recorded
  * in the output file at 'output_filepath'.
@@ -14,15 +13,14 @@
  * @param output_filepath Path to a txt file with expected output
  * @param mode Mode to use. 0 for strict, 1 for lenient.
  */
-void assert_output_equal(const char *executable, const char *output_filepath, int mode);
-
+void assert_output_equal(const char *executable, const char *output_filepath,
+                         int mode);
 
 /**
  * Perform common resets for test cases. This is preferrably run before the
  * each test case.
  */
 void tests_common_reset(void);
-
 
 /**
  * Join two path segments. This is here to ensure we do NOT have to
@@ -33,6 +31,5 @@ void tests_common_reset(void);
  * @return Joined path
  */
 char *path_join(const char *segment1, const char *segment2);
-
 
 #endif

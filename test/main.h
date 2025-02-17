@@ -46,7 +46,9 @@
 #include "status.h"
 #endif
 
-#define skip_if_filtered_out(str) if (NULL != getenv("TEST_FILTER") && NULL == strstr(str, getenv("TEST_FILTER"))) skip();
-
+#define skip_if_filtered_out(str)                                              \
+  if (NULL != getenv("TEST_FILTER") &&                                         \
+      NULL == strstr(str, getenv("TEST_FILTER")))                              \
+    skip();
 
 #endif

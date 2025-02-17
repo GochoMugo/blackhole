@@ -5,7 +5,6 @@
 #ifndef _BH_blackhole_h_
 #define _BH_blackhole_h_ 1
 
-
 #define BH_VERSION "0.0.0-develop"
 
 #define BH_DAEMON_DEFAULT_NAME "blackhole-daemon"
@@ -30,6 +29,5 @@
 #include "blackhole/print.h"
 #include "blackhole/status.h"
 #include "blackhole/sync.h"
-
 
 #endif
