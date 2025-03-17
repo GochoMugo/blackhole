@@ -58,6 +58,7 @@ set(src_exe src/bh.c)
 add_executable(bh ${src_exe})
 target_link_libraries(bh blackhole ${deps})
 add_dependencies(bh build-iniparser build-libgit2 blackhole)
+install(TARGETS bh RUNTIME)
 
 # test headers
 set(test_deps blackhole ${deps} cmocka)
