@@ -31,7 +31,7 @@ _cross:
 deps:
 	git submodule init
 	git submodule update
-	clib install --skip-cache `cat clib.json | jq '.dependencies | to_entries | map([.key,.value] | join("@")) | .[]' -r | tr '\n' ' '`
+	clib install
 
 _deps_cross:
 	docker run --rm dockcross/linux-arm64-full > cross-compile
