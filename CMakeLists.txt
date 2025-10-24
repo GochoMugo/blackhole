@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 4.1)
 project(blackhole)
 
 # modules
@@ -20,9 +20,12 @@ list(APPEND deps contra curl)
 
 # iniparser
 include_directories(deps/iniparser/src)
-link_directories(deps/iniparser)
+link_directories(deps/iniparser/build)
 add_custom_target(build-iniparser
-    COMMAND make libiniparser.a
+    COMMAND mkdir -p build
+        && cd build
+        && cmake ..
+        && make all
     WORKING_DIRECTORY ${root_dir}/deps/iniparser)
 list(APPEND deps iniparser)
 
