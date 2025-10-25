@@ -18,6 +18,7 @@
 #include <git2.h>
 #include <iniparser.h>
 #include <contra.h>
+#include <unistd.h>
 
 #include "../deps/flag/flag.h"
 #include "../deps/mkdirp/mkdirp.h"
