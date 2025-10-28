@@ -62,8 +62,8 @@ make install
 make bh               # Build the main binary.
 make blackhole        # Build the library.
 
-# Run tests.
-make run-tests
+# Run all tests.
+make test
 
 # Dependency-related tasks.
 make build-iniparser  # iniparser

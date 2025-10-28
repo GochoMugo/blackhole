@@ -93,11 +93,11 @@ add_custom_target(setup-tests
     WORKING_DIRECTORY ${root_dir}/test)
 
 # run tests
-add_custom_target(run-tests
+add_custom_target(test
     COMMAND TEST_DIR=${root_dir}/test
         ${CMAKE_CURRENT_BINARY_DIR}/bh-tests
     WORKING_DIRECTORY ${root_dir}/test)
-add_dependencies(run-tests bh-tests setup-tests)
+add_dependencies(test bh-tests setup-tests)
 
 # clean after tests
 add_custom_target(clean-tests
