@@ -29,8 +29,8 @@ Production dependencies required:
 
 Development dependencies:
 
-* [libgit2 v0.24.1][libgit2] (compiled with libssh2 support)
-* [iniparser v4.0][iniparser]
+* [libgit2 v1][libgit2] (compiled with libssh2 support)
+* [iniparser v4][iniparser]
 * [clib][clib] (for installing other deps)
 
 
@@ -62,8 +62,16 @@ make install
 make bh               # Build the main binary.
 make blackhole        # Build the library.
 
-# Run all tests.
-make test
+# Tests
+make test             # Run all tests.
+make test.config      # Run tests for config module.
+make test.counter     # Run tests for counter module.
+make test.daemon      # Run tests for daemon module.
+make test.error       # Run tests for error module.
+make test.git         # Run tests for git module.
+make test.hook        # Run tests for hook module.
+make test.print       # Run tests for print module.
+make test.status      # Run tests for status module.
 
 # Dependency-related tasks.
 make build-iniparser  # iniparser
@@ -71,13 +79,11 @@ make build-libgit2    # libgit2
 
 # Test-related tasks.
 make gen-test-headers # Generate test headers.
-make bh-tests         # Build the test binary.
-make setup-tests      # Setup test data.
 make clean-tests      # Clean up junk files from tests.
 ```
 
 * `${PREFIX}` defaults to `/usr/local`
-* `${TEST_FILTER}`: Set to filter specific tests.
+* `${TEST_FILTER}`: Set to filter specific test cases that should run.
 * `${TEST_NO_NETWORK}`: Set to skip tests using network.
 
 [clib]:https://github.com/clibs/clib

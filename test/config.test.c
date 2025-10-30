@@ -1,27 +1,28 @@
-#include "main.h"
+#include "config.test.h"
 
 static char *TEST_DIR = NULL;
 static char *path = NULL;
 static bh_config *config = NULL;
 
 int tests_bh_config_setup_each(void **state) {
-  int ret_code = 0;
-  if (NULL == TEST_DIR)
-    TEST_DIR = getenv("TEST_DIR");
-  if (NULL == path)
-    path = path_join(TEST_DIR, "data/bh-config");
-  if (NULL == config)
-    ret_code = bh_config_new(&config, path);
-
-  assert_int_equal(ret_code, 0);
+  TEST_DIR = getenv("TEST_DIR");
   assert_non_null(TEST_DIR);
+
+  path = path_join(TEST_DIR, "data/bh-config");
   assert_non_null(path);
+
+  assert_ok(bh_config_new(&config, path));
   assert_non_null(config);
+
   tests_common_reset();
   return 0;
 }
 
-int tests_bh_config_teardown_each(void **state) { return 0; }
+int tests_bh_config_teardown_each(void **state) {
+  if (NULL != path) free(path);
+  if (NULL != config) bh_config_free(&config);
+  return 0;
+}
 
 /**
  * `bh_config_new()` loads the configuration file into a dictionary structure

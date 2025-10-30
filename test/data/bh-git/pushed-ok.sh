@@ -6,9 +6,9 @@ set -e
 #
 # How? It ensures we committed and a change and compares
 # 'refs/heads/master', 'refs/remotes/origin/master' and
-# 'refs/remotes/test/master'
+# 'refs/remotes/origin2/master'
 
 source "${TEST_DIR_DATA_GIT}/_variables.sh"
 
 [[ "$(cat "${root_dir}/.git/refs/heads/master")" == "$(cat "${root_dir}/.git/refs/remotes/origin/master")" ]] && true || false
-[[ "$(./origin-remote-unsync.sh && echo true || echo false)" == "false" ]] && true || false
+[[ "$(./origins-unsynced.sh && echo true || echo false)" == "false" ]] && true || false

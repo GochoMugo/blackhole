@@ -1,17 +1,17 @@
-#include "main.h"
+#include "error.test.h"
 
 void common_reset(void) {
   bh_error_clear();
-  if (NULL != giterr_last())
-    giterr_clear();
+  giterr_clear();
   errno = 0;
 
   assert_null(bh_error_get());
-  assert_null(giterr_last());
+  // assert_null(git_error_last()); // Not guaranteed to be NULL.
   assert_int_equal(errno, 0);
 }
 
 int tests_bh_error_setup_each(void **state) {
+  git_libgit2_init();
   common_reset();
   tests_common_reset();
   return 0;
@@ -19,6 +19,7 @@ int tests_bh_error_setup_each(void **state) {
 
 int tests_bh_error_teardown_each(void **state) {
   common_reset();
+  git_libgit2_shutdown();
   return 0;
 }
 
@@ -46,11 +47,11 @@ void tests_bh_error_set_libgit2(void **state) {
   const char *message = "sample error message";
   const bh_error *err;
   giterr_set_str(1, message);
-  bh_error_set(-1);
+  bh_error_set(BH_GITERR);
   err = bh_error_get();
   assert_int_equal(err->code, BH_GITERR);
-  assert_non_null(strstr(err->message, message));
   assert_non_null(strstr(err->message, "[LIBGIT2]"));
+  assert_non_null(strstr(err->message, message));
 }
 
 /**
@@ -75,15 +76,12 @@ void tests_bh_error_set_errno(void **state) {
  */
 void tests_bh_error_set_already_set(void **state) {
   skip_if_filtered_out("tests_bh_error_set_already_set");
-  char *message = NULL;
   const bh_error *err;
   bh_error_set(BH_ERR);
   err = bh_error_get();
   assert_int_equal(err->code, BH_ERR);
-  asprintf(&message, "%s", err->message);
   bh_error_set(BH_ERR + 1);
-  assert_string_equal(err->message, message);
-  ;
+  assert_int_equal(err->code, BH_ERR); // Didn't change.
 }
 
 /**
@@ -174,7 +172,8 @@ void tests_bh_error_copy_ok(void **state) {
   bh_error *error = NULL;
   bh_error_set(BH_ERR);
   assert_ok(bh_error_copy(&error));
-  assert_int_equal(error->code, BH_ERR);
+  assert_ptr_not_equal(error, bh_error_get());
+  assert_int_equal(error->code, bh_error_get()->code);
   assert_string_equal(error->message, bh_error_get()->message);
   bh_error_free(&error);
 }

@@ -1,23 +1,23 @@
-#include "main.h"
+#include "counter.test.h"
 
-static const char *path_counters = NULL;
+static char *TEST_DIR = NULL;
+static char *path_counters = NULL;
 
 int tests_bh_counter_setup_each(void **state) {
-  char *test_dir = NULL;
-  char *path = NULL;
+  TEST_DIR = getenv("TEST_DIR");
+  assert_non_null(TEST_DIR);
 
-  if (NULL == path || NULL == path_counters) {
-    test_dir = getenv("TEST_DIR");
-    path = path_join(test_dir, "data/bh-counter");
-    path_counters = path_join(path, ".blackhole/counters");
-  }
-
+  path_counters = path_join(TEST_DIR, "data/bh-counter/.blackhole/counters");
   assert_non_null(path_counters);
+
   tests_common_reset();
   return 0;
 }
 
-int tests_bh_counter_teardown_each(void **state) { return 0; }
+int tests_bh_counter_teardown_each(void **state) {
+  if (NULL != path_counters) free(path_counters);
+  return 0;
+}
 
 /**
  * `bh_counter_get()` reads the counter file.
@@ -75,7 +75,7 @@ void tests_bh_counter_get_nan(void **state) {
 void tests_bh_counter_get_binary(void **state) {
   skip_if_filtered_out("tests_bh_counter_get_binary");
   int count = -2;
-  int ret_code = bh_counter_get(&count, path_counters, "binary.counter");
+  int ret_code = bh_counter_get(&count, path_counters, "binary.tmp.counter");
   assert_int_equal(ret_code, BH_COUNTERERR_FREAD);
   assert_int_equal(count, -2);
 }

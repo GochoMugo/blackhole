@@ -1,30 +1,35 @@
 #ifndef _BH_tests_util_h_
 #define _BH_tests_util_h_ 1
 
-/**
- * Assert that the 'executable' produces the same output as recorded
- * in the output file at 'output_filepath'.
- *
- * Modes define how the comparisons are done. They include:
- *  0: the strings must be exactly equal
- *  1. the string from the run process contains the string in the output file
- *
- * @param executable The executable to be run
- * @param output_filepath Path to a txt file with expected output
- * @param mode Mode to use. 0 for strict, 1 for lenient.
- */
-void assert_output_equal(const char *executable, const char *output_filepath,
-                         int mode);
+/** Asserts that the file at the provided path does exist. */
+void assert_file_exists(const char *file_path);
+
+/** Assert the expression is 0 or truthy. */
+#define assert_ok(expr) assert_int_equal(0 <= expr, 1)
+
+/** Executes the file at the provided path and asserts it did not fail. */
+void execute_script(const char *filepath);
+
+/** Skip the test if env var TEST_FILTER is set and does not contain provided string. */
+#define skip_if_filtered_out(str)                                              \
+  if (NULL != getenv("TEST_FILTER") &&                                         \
+      NULL == strstr(str, getenv("TEST_FILTER")))                              \
+    skip();
+
+/** Skip the test if env var TEST_NO_NETWORK is set. */
+#define skip_if_no_network()                                                   \
+  if (NULL != getenv("TEST_NO_NETWORK"))                                       \
+    skip();
 
 /**
- * Perform common resets for test cases. This is preferrably run before the
- * each test case.
+ * Perform common resets for test cases. This is preferrably run before and
+ * after each test case.
  */
 void tests_common_reset(void);
 
 /**
- * Join two path segments. This is here to ensure we do NOT have to
- * change all current occurrences of 'path_join' to 'contra_path_join'.
+ * Join two path segments. This is a convenience function that returns
+ * the new path instead of a return code.
  *
  * @param  segment1
  * @param  segment2

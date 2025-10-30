@@ -11,16 +11,15 @@ set -e
 source "${TEST_DIR_DATA_GIT}/_variables.sh"
 
 rm -rf .git/ *.txt
-git init . > /dev/null
-
+git init --quiet .
 rm -rf .git/hooks
 
-git remote add origin "${origin_url}"
-git remote add test "${remote_url}"
+git remote add origin "${origin1_url}"
+git remote add origin2 "${origin2_url}"
 
 cp gitignore .gitignore
 git add .gitignore
-git commit -m "Root commit" > /dev/null
+git commit --message "Root commit" > /dev/null
 
 if [[ -z "${TEST_NO_NETWORK}" ]]
 then
@@ -28,7 +27,7 @@ then
         echo " [X] pushing to origin failed (${BASH_SOURCE[0]})"
         false
     }
-    retry git push test master --force > /dev/null 2>&1 || {
+    retry git push origin2 master --force > /dev/null 2>&1 || {
         echo " [X] pushing to remote failed (${BASH_SOURCE[0]})"
         false
     }

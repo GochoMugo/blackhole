@@ -9,4 +9,4 @@ source "${TEST_DIR_DATA_GIT}/_variables.sh"
 
 ./touch.sh
 git add "${file_new}"
-git commit -m "${file_new}" > /dev/null
+git commit --message "${file_new}" > /dev/null

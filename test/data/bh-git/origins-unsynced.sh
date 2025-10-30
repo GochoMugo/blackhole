@@ -9,4 +9,4 @@ set -e
 
 source "${TEST_DIR_DATA_GIT}/_variables.sh"
 
-[[ "$(cat "${root_dir}/.git/refs/remotes/origin/master")" != "$(cat "${root_dir}/.git/refs/remotes/test/master")" ]]
+[[ "$(cat "${root_dir}/.git/refs/remotes/origin/master")" != "$(cat "${root_dir}/.git/refs/remotes/origin2/master")" ]]

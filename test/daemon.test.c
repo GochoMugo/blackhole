@@ -1,35 +1,36 @@
-#include "main.h"
+#include "daemon.test.h"
 
 static char *TEST_DIR = NULL;
 static char *path = NULL;
-static bh_daemon *d = NULL;
+static bh_daemon *test_daemon = NULL;
 
 int tests_bh_daemon_setup_each(void **state) {
-  int ret_code = 0;
-  if (NULL == TEST_DIR)
-    TEST_DIR = getenv("TEST_DIR");
-  if (NULL == path)
-    path = path_join(TEST_DIR, "data/bh-daemon");
-  if (NULL == d)
-    ret_code = bh_daemon_new(&d, path);
-
-  assert_int_equal(ret_code, 0);
+  TEST_DIR = getenv("TEST_DIR");
   assert_non_null(TEST_DIR);
+
+  path = path_join(TEST_DIR, "data/bh-daemon");
   assert_non_null(path);
-  assert_non_null(d);
+
+  assert_ok(bh_daemon_new(&test_daemon, path));
+  assert_non_null(test_daemon);
+
   tests_common_reset();
   return 0;
 }
 
-int tests_bh_daemon_teardown_each(void **state) { return 0; }
+int tests_bh_daemon_teardown_each(void **state) {
+  if (NULL != test_daemon) bh_daemon_free(&test_daemon);
+  if (NULL != path) free(path);
+  return 0;
+}
 
 /**
  * `bh_daemon_new()` creates a new `bh_config` on the `config` property.
  */
 void tests_bh_daemon_new_config(void **state) {
   skip_if_filtered_out("tests_bh_daemon_new_config");
-  assert_non_null(d->config);
-  assert_string_equal(d->config->name, "test");
+  assert_non_null(test_daemon->config);
+  assert_string_equal(test_daemon->config->name, "test");
 }
 
 /**
@@ -37,7 +38,7 @@ void tests_bh_daemon_new_config(void **state) {
  */
 void tests_bh_daemon_new_manager(void **state) {
   skip_if_filtered_out("tests_bh_daemon_new_manager");
-  assert_non_null(d->manager);
+  assert_non_null(test_daemon->manager);
 }
 
 /**
@@ -45,10 +46,8 @@ void tests_bh_daemon_new_manager(void **state) {
  */
 void tests_bh_daemon_new_paths(void **state) {
   skip_if_filtered_out("tests_bh_daemon_new_paths");
-  assert_non_null(strstr(d->paths.counters, path));
-  assert_non_null(strstr(d->paths.counters, "counters"));
-  assert_non_null(strstr(d->paths.hooks, path));
-  assert_non_null(strstr(d->paths.hooks, "hooks"));
+  assert_non_null(strstr(test_daemon->paths.counters, path_join(path, ".blackhole/counters")));
+  assert_non_null(strstr(test_daemon->paths.hooks, path_join(path, ".blackhole/hooks")));
 }
 
 /**
@@ -57,9 +56,9 @@ void tests_bh_daemon_new_paths(void **state) {
  */
 void tests_bh_daemon_new_signature(void **state) {
   skip_if_filtered_out("tests_bh_daemon_new_signature");
-  assert_non_null(d->signature);
-  assert_string_equal(d->signature->name, "test");
-  assert_string_equal(d->signature->email, "test@example.com");
+  assert_non_null(test_daemon->signature);
+  assert_string_equal(test_daemon->signature->name, "test");
+  assert_string_equal(test_daemon->signature->email, "test@example.com");
 }
 
 /**
@@ -67,6 +66,6 @@ void tests_bh_daemon_new_signature(void **state) {
  */
 void tests_bh_daemon_free_frees(void **state) {
   skip_if_filtered_out("tests_bh_daemon_free_frees");
-  bh_daemon_free(&d);
-  assert_null(d);
+  bh_daemon_free(&test_daemon);
+  assert_null(test_daemon);
 }

@@ -15,4 +15,4 @@ source "${TEST_DIR_DATA_GIT}/_variables.sh"
 echo "
 XXX
 YYY
-" > new.txt
+" > "${file_new}"

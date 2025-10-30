@@ -14,5 +14,6 @@ release/
 
 # test artefacts
 test/data/**/*.tmp.counter
+test/data/**/*.tmp.txt
 test/data/**/*.out
 test/data/bh-git/.gitignore
