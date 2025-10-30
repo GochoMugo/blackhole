@@ -12,8 +12,7 @@
  *
  * @param manager Newly-created repository manager
  * @param config Daemon configuration
- * @return 0 on success, BH_GITERR_NULL_PATH if path is NULL or another error
- *   code
+ * @return 0 on success, or error code
  */
 int bh_git_repository_manager_new(bh_git_repository_manager **manager,
                                   bh_config *config);

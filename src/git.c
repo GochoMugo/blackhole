@@ -12,10 +12,6 @@ int bh_git_repository_manager_new(bh_git_repository_manager **manager,
   git_strarray remote_names = {0};
   git_remote **remotes = NULL;
 
-  if (NULL == config->path) {
-    return_err_now(BH_GITERR_NULL_PATH);
-  }
-
   /* NOTE: For some reason, this must come before the malloc() call */
   git_libgit2_init();
 
@@ -29,6 +25,7 @@ int bh_git_repository_manager_new(bh_git_repository_manager **manager,
   mgr->origin = NULL;
   mgr->num_of_remotes = 0;
 
+  contra_assert_not_null(config->path);
   return_err(git_repository_open(&(mgr->repository), config->path));
 
   return_err(git_remote_list(&remote_names, mgr->repository));
