@@ -38,7 +38,7 @@ link_directories(deps/libgit2/build ${LIBSSH2_LIBRARY_DIRS})
 add_custom_target(build-libgit2
     COMMAND mkdir -p build
         && cd build
-        && cmake .. -DBUILD_SHARED_LIBS=OFF -DBUILD_CLAR=OFF -DCURL=OFF -DUSE_OPENSSL=OFF
+        && cmake .. -DUSE_SSH=ON
         && make
     WORKING_DIRECTORY ${root_dir}/deps/libgit2)
 list(APPEND deps git2 ssh2 z)
